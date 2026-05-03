@@ -1,0 +1,48 @@
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+
+\begin{document}
+\section{Introduction and Motivation}
+
+Surveys of "hard-to-reach" populations face an obstacle: as these populations of interest, which often perform stigmatized behaviors, have rare qualities, or are otherwise marginalized, lack manageable sampling frames and their members are too sparsely distributed in the general population to be reached efficiently through conventional probability designs. New York City's jazz musicians constitute one such population. Introduced by Heckathorn (1997), Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn (2004), Heckathorn (2002, 2007), and Volz and Heckathorn (2008), address this obstacle, as Gile and Handcock (2017) frame, in two ways. First, RDS employs a chain-referral design by beginning from a convenience sample of "seed" respondents; each participant is given a small, fixed number of coupons to distribute to peers within the target population, who in turn recruit further participants, thus exploiting the social network of a given population to draw respondents. Second, by relying modeling the recruitment process as a Markov chain, where each participant recruits the next participant in their network at random, sufficient waves of recruitment will eventually reduce "seed bias" from the convenience sample, so RDS methods allow for populations-level characteristics to be estimated. 
+
+In practice, however, 
+
+
+We apply RDS to sample anti-AI Harvard undergraduates and better understand these undergraduates' perspectives on why they are anti-AI, building a graph model based on  data collected. Because self-identifying as \textit{anti-AI} often carries a negative connotation in particular academic contexts where AI has been adopted as a new norm as reflected in pejoratives like "luddite," we argue that RDS's confidentiality-preserving design is ideal. Throughout the following, \textit{anti-AI} is defined against \textit{not anti-AI}; . Furthermore, because anti-Ai students come from a variety of backgrounds and we hypothesize that such an attitude is sparse within a general population, we use RDS to exploit existing social network structure over other possible sampling schemes. If this were a social science paper, [why are anti-AI Harvard students, anti-AI would constitute our research question.] While we hope to provide some preliminary insight to this question, we are more interested in the survey methodology developed; we present a novel method to mitigate bias [in ]
+
+RQ, we have to be super specific here per rubric: [SOURCES OF BIAS -> MITIGATING BIAS, estimators and downweighting]
+
+
+\section{Existing Literature}
+
+Draw from slideshow, shows three problems with VH estimator and potential solutions
+
+https://arxiv.org/abs/1812.01188
+
+
+
+
+\section{Survey Design and Data Processing}
+
+In designing our survey of anti-AI Harvard students, we employed several strategies discussed and modeled in the literature in order to mitigate bias. 
+\subsection{Seed bias}
+To mitigate seed bias, we chose seeds from across houses, concentrations, and years.
+
+\subsection{Preferential referrals}
+In constructing our referral question, we attempted to lower the bias arising from preferential referrals within networks by asking respondents to "Please randomly choose up to three anti-AI Harvard undergraduates you know to refer for this survey."
+
+We also collected data about the user's degree within the Anti-AI network. This is important in order to later correct for degree, as RDS is biased towards well-connected nodes who are more likely to be referred. Modeled after the paper [Cite], we asked a specific, measurable proxy question to obtain a relative measure of in-network degree: "To the best of your knowledge, what is the number of known anti-AI Harvard students you've communicated with in the last week?"
+
+can talk about survey incentives
+
+data cleaning like how we grouped multiple majors into fewer categories, and why some of these groupings are valid (both from a size perspective and ideology perspective. ideally each of the formed groups should have an equal size)
+
+\section{Empirical Testing}
+testing on code; this is where we derive the optimal ``downweighting"
+
+\section{Application on Data}
+
+\section{Conclusions}
+\end{document}
