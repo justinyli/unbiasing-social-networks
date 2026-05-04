@@ -109,7 +109,7 @@
 \RequirePackage[most,many]{tcolorbox}
 \RequirePackage{colortbl}
 \RequirePackage{booktabs}
-\AtBeginEnvironment{tabular}{\small\sffamily}
+\AtBeginEnvironment{tabular}{\ttfamily}
 \newcommand{\tabletext}[1]{{\fontsize{7}{9}\vskip2pt\sffamily\itshape\selectfont#1}}
 
 %----------------------------------------------------------
