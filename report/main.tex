@@ -50,8 +50,13 @@
 
 Surveys of "hard-to-reach" populations face an obstacle as these populations of interest that often face stigma, marginalization, or are otherwise rare, lack manageable sampling frames, and their members are too sparsely distributed in the general population to be reached efficiently through conventional survey design. New York City's jazz musicians constitute one such population. Introduced by Heckathorn (1997) to study this population, Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn (2004), Heckathorn (2002, 2007), and Volz and Heckathorn (2008), address this obstacle, as Gile and Handcock (2010) frame, in two main ways. First, RDS employs a chain-referral design by beginning from a convenience sample of "seed" respondents; each participant is given a small, fixed number of coupons to distribute to peers within the target population, who in turn recruit further participants, thus exploiting the social network of a given population to draw respondents. Second, by modeling the recruitment process as a Markov chain, where each participant recruits the next participant in their network at random, sufficient waves of recruitment will eventually reduce "seed bias" from the convenience sample, so RDS methods allow populations-level characteristics to be estimated. 
 
-Volz and Heckathorn (2008) thus establish an unbiased, generalized Horowitz-Thompson estimator whereby for a given characteristic of the population $g(y)$:
-$$\hat{\mu}_{HT} :=  \frac{\sum_{i\in V_S}\frac{g(y_i)}{d(i)}}{\sum_{j\in V_S}\frac{1}{d(j)}}$$
+The standard Volz-Heckathorn (2008) estimator estimates the population mean of a function $g(Y)$ as \todo{delete if already introduced}
+% TODO
+
+\[
+\hat \mu_{VH} = \frac{\sum_{t = 1}^n \frac{g(Y_{i_t})}{d_{i_t}}}{\sum_{t = 1}^n \frac{1}{d_{i_t}}}.
+\]
+
 The VH estimator rests on several key assumptions: (i) the recruitment chain is long enough for the Markov chain to mix; (ii) respondents recruit uniformly at random from their network contacts; (iii) self-reported degree accurately reflects true network degree; (iv) the underlying network is connected and undirected; and (v) sampling with replacement, so that the same individual is not recruited twice. In practice, each of these assumptions faces empirical challenges..."
 We ask: which assumptions of RDS are met and violated in practice, and how well do existing and novel methods for adjusting bias account for these real-world results?
 
