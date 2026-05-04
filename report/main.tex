@@ -1,4 +1,4 @@
-\documentclass[9pt,a4paper,twocolumn,twoside]{rho-class/rho}
+\documentclass[11pt,a4paper,twocolumn,twoside]{rho-class/rho}
 \usepackage[english]{babel}
 \usepackage{todonotes}
 
@@ -6,44 +6,27 @@
 % Title
 %----------------------------------------------------------
 
-\doctype{Final Project Report}
-\title{Unbiasing Estimates for RDS in Practice}
+\doctype{Stat 175 Final Project Report}
+\title{Debiasing Estimates for RDS in Practice}
 
 %----------------------------------------------------------
 % Authors, Affiliations and dates
 %----------------------------------------------------------
 
-\author[1]{Justin Li}
-\author[1]{Bobby Cupps}
-\author[1]{Zach Gladney}
-\author[1]{Julia Poulson}
-\author[1]{Andrew Kang}
-%----------------------------------------------------------
-
-\affil[]{}
-
-%----------------------------------------------------------
-
-\dates{This manuscript was compile on April 15, 2026}
+\author[1]{
+    Justin Li,
+    Bobby Cupps,
+    Zach Gladney,
+    Julia Poulson,
+    Andrew Kang
+}
 
 %----------------------------------------------------------
-% Corresponding author-, Document- information
-%----------------------------------------------------------
 
-\corres{\textsuperscript{\textasteriskcentered}Corresponding author: \href{mailto:author.one@institute.org}{author.one@institute.org} (A. One).}
-\corres{\textsuperscript{\textdagger}These authors contributed equally to this work.}
+\dates{This manuscript was compiled on April 15, 2026 \todo{remove?}}
 
-%----------------------------------------------------------
 
 \docinfo{This document class was prepared on Overleaf and compiled with pdf\LaTeX{}. No errors were found during the compilation process. Rho-class supports external editors, though additional setup may be required.} 
-
-%----------------------------------------------------------
-
-\journalname{LATEX}
-\journal{Rho-class (v.3) 2026}
-\theday{\today}
-\vol{X}
-\no{X}
 
 %----------------------------------------------------------
 % Abstract and Keywords
@@ -55,9 +38,6 @@
 
 %----------------------------------------------------------
 
-\keywords{Rho-class, Research Article, Laboratory Report, Academic Writing, Journal}
-
-%----------------------------------------------------------
 
 \begin{document}
 
@@ -102,6 +82,92 @@ can talk about survey incentives
 
 data cleaning like how we grouped multiple majors into fewer categories, and why some of these groupings are valid (both from a size perspective and ideology perspective. ideally each of the formed groups should have an equal size)
 
+\section{Methodology}
+\subsection{Intuition}
+We propose a community-aware weighting scheme that generalizes the Volz-Heckathorn estimator by downweighting consecutive same-community referrals, which is motivated by homophily in RDS chains causing referrals to have similar responses, especially when the referred respondent is in the same community as the referrer. 
+Under strong homophily, the RDS process no longer behaves like a random walk that mixes between communities. Furthermore, opinions are often strongly correlated with community. Therefore, consecutive samples within the same community may carry less information about the overall population distribution, and cross-community referrals act as mixing events that carry disproportionately more information about population level distributions. 
+
+Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an ``echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
+
+\subsection{Proposed Estimator}
+Formally, we consider a population represented by a network $G = (V, E),$ partitioned into $K$ communities $\mathcal{C} = \{1, 2, \ldots, K\}.$ Each individual $i \in V$ has both a community label $c(i) \in \mathcal{C}$ as well as exactly one of $I$ opinions, $Y_i \in \{1, 2, \ldots I\}.$ 
+Let the RDS process be defined as a sequence of referrals $\{i_t\}_{t = 1}^n,$ so the total sample size is $n.$
+The standard Volz-Heckathron estimator estimates the population mean of a function $g(Y)$ as \todo{delete if already introduced}
+% TODO
+
+\[
+\hat \mu_{VH} = \frac{\sum_{t = 1}^n \frac{g(Y_{i_t})}{d_{i_t}}}{\sum_{t = 1}^n \frac{1}{d_{i_t}}}.
+\]
+
+We propose to downweight within-community referrals; that is,
+
+\begin{equation}\label{eq:main_estimator}
+w_t(\alpha) = \frac{1}{d_{i_t}} \cdot \alpha^{I(c(i_t) = c(i_{t - 1}))}
+\end{equation}
+
+\noindent where $\alpha \in [0, 1].$ Note that seeds as well as first entries into a community are not downweighted, but all following referrals that remain within the same community are downweighted. Then the modified estimator is
+
+\[
+\hat \mu(\alpha) = \frac{\sum_{t = 1}^n w_t(\alpha) g(Y_{i_t})}{\sum_{t = 1}^n w_t(\alpha)}.
+\]
+
+\noindent Note that letting $\alpha = 1$ recovers the standard Volz-Heckathorn estimator.
+
+The optimal $\alpha$ should then be determined by community dependence; that is, the correlation of opinions within the same community and the homophily in the network. With high correlation and high homophily, referrals within the same community are likelier to lead to redundant information, meaning that $\alpha$ should be smaller. When correlation and homophily are low, then within-community samples still remain information, so $\alpha \approx 1.$
+
+We now formally derive an estimate for $\alpha.$ Suppose that for each individual $i,$ we have
+
+\[
+g(Y_i) = \mu + \gamma_{c(i)} + \epsilon_i
+\]
+
+% TODO reword below
+\noindent with $\mu$ representing a global {\color{red} opinion}, $\gamma_{c(i)}$ representing the community specific opinion, and $\epsilon_i$ a user-level noise term. Let $E[\gamma_{c(i)}] = 0$ and $E[\epsilon_i] = 0,$ and also let $\text{Var}(g(Y_i)) = \sigma^2_\gamma + \sigma^2_\epsilon.$ Define the intra-community correlation as $\rho := \frac{\sigma^2_\gamma}{\sigma^2_\gamma + \sigma^2_\epsilon};$ it represents the proportion of variance explained by community-level opinions.
+Then for two nodes $i, j,$
+
+\[
+\text{Cov}(g(Y_i, Y_j)) = \begin{cases}
+    \sigma^2_\gamma, &c(i) = c(j) \\
+    0, &\text{otherwise.}
+\end{cases}
+\]
+
+\noindent Suppose we have $k$ consecutive samples all from the same community. Let $\bar g_k = \frac{1}{k} \sum_{t = 1}^k g(Y_{i_t}).$ This has variance
+
+\[
+\text{Var}(\bar g_k) = \frac{1}{k^2} \sum_{t = 1}^k \sum_{s = 1}^k \text{Cov}(g(Y_{i_t}, Y_{i_s})).
+\]
+
+\noindent Then using the variance and covariance from above, we have that
+
+\begin{align*}
+\text{Var}(\bar g_k) &= \frac{1}{k^2}[k(\sigma^2_\gamma + \sigma^2_\epsilon) + k(k - 1)\sigma^2_\gamma] \\
+&= \frac{\sigma^2_\gamma + \sigma^2_\epsilon}{k} (1 + (k - 1)\rho). \\
+\end{align*}
+
+We define the effective sample size $n_{eff}$ as the number of independent samples that would give the same variance as the correlated sample mean $\text{Var}(\bar g_k)$; therefore, we solve
+
+\begin{align*}
+    \frac{\sigma^2_\gamma + \sigma^2_\epsilon}{k} (1 &+ (k - 1)\rho) = \frac{\sigma^2_\gamma + \sigma^2_\epsilon}{n_{eff}} \\
+    \implies n_{eff} &= \frac{k}{1 + (k - 1)\rho}.\\
+\end{align*}
+
+
+\noindent Ideally, the total contribution of a run of $k$ samples in the same community should have weight similar to its effective sample size $n_{eff}.$ Because each observation is assigned weight $\alpha$ (besides the first observation, but we ignore this), then the total weight of the run is $k \alpha.$ Then solving
+
+\begin{align*}
+    k\alpha &\approx \frac{k}{1 + (k - 1)\rho} \\
+    \implies \alpha^* &\approx \frac{1}{1 + (k - 1)\rho}.\\
+\end{align*}
+
+\textbf{\color{red} Can add the MSE thing here. With bias-variance tradeoff.}
+This value of $\alpha^*$ makes sense in limiting cases: when $\rho = 0,$ all samples are important because intra-community referrals are as informative as any referral; this gives $\alpha^* = 1$ as expected. When $k = 1,$ we have $\alpha^* = 1$ which again makes sense because the original entry into a community shouldn't be downweighted. Finally, when $\rho, k$ are both large, then $\alpha^* \to 0$ which is logical because with high correlation and high homophily, new referrals within the same community are less informative and should be discounted at a higher rate.
+
+The above derivation is dependent on assumptions like communities being observed, correlation primarily being driven by community (which appears in the formulation for $g(Y_i)$), and the sampling structure being well-approximated by runs of consecutive samples in a single community of typical length $k.$
+
+
+
+
 
 \section{Empirical Testing}
 
@@ -110,281 +176,12 @@ data cleaning like how we grouped multiple majors into fewer categories, and why
 
 \section{Application on Data}
 
+give an algorithm for this (eg estimate $\rho, k$ and then get $\alpha$. then run on data)
     Tbd...
 		
-    \figref{fig:figure} shows a 3D surface visualization of a bivariate function.
-    		
-    \begin{figure}[H]
-    	\centering
-    	\includegraphics[width=0.7\columnwidth]{figures/Example.pdf}
-    	\caption{3D surface obtained from PGFPlots \cite{PFGPlots}.}
-    	\label{fig:figure}
-    \end{figure}
 
 \section{Conclusion}
-
-
 	
-        \tabref{tab:table} shows an example table of some astronomical objects. 
-
-        \begin{table}[H]
-        	\caption{Astronomical Object Data}
-        	\label{tab:table}
-        	\begin{tabular}{
-        		>{\raggedright\arraybackslash}p{0.25\columnwidth}
-        		>{\raggedright\arraybackslash}p{0.29\columnwidth}
-        		>{\raggedright\arraybackslash}p{0.31\columnwidth}
-        	}
-        	\toprule
-        	\textbf{Object} & \textbf{Type} & \textbf{Distance (Light Years)} \\
-        	\midrule
-        	Alpha Centauri & Star system & 4.37 \\
-        	Betelgeuse & Red supergiant star & 642.5 \\
-        	Andromeda & Spiral galaxy & 2.537 million \\
-        	Earth & Planet & 0 \\
-        	Sirius & Binary star system & 8.6 \\
-        	\bottomrule
-        	\end{tabular}
-        	\tabletext{Note: The table contains data of some famous celestial objects.}
-        \end{table}
-
-        The \inlinecode{\tabletext{}} command is used to add notes to tables easily. 
-
-\section{Document Data}
-
-    \subsection{Front-Matter Footer Block*}
-
-        A new block called \inlinecode{\docinfo{}}, has been added to the bottom right of the first page, acting as a floating element which stays fixed in place. This replaces the corresponding author block previously located above the abstract in earlier versions.
-
-        The \inlinecode{\docinfo{}} block was created to give you greater control over supplementary document data, such as publication dates, licensing information, extended author details, and other front-matter notes. You can fully customize its content to suit your needs.
-
-        Additionally, the new \inlinecode{\corres{}} command serves as a flexible alternative to \inlinecode{\thanks{}}. Since modifying the standard \inlinecode{\thanks{}} command can be complex and its positioning is often rigid, \inlinecode{\corres{}} was introduced to offer a more adaptable solution without sacrificing functionality. 
-        
-        \begin{note}
-            You can use \verb|\corres{}| as many times as needed since it automatically ensures that each entry remains correctly associated. For best results, I recommend using text symbols rather than mathematical ones (e.g., \verb|\textasteriskcentered|, \verb|\textdagger|, etc.). 
-        \end{note}
-
-        If \inlinecode{\corres{}} is not used, \inlinecode{\docinfo{}} will automatically adjust its position. The implementation was designed to handle any combination of front-matter elements you might need when starting your document. In this example template, you’ll find a minimal demonstration that combines both to illustrate their interaction.
-
-    \subsection{Headers and Footers*}
-
-        \subsubsection{Headers}
-
-            On all pages except the first, the document title and journal appear in the header. Since twoside layout is enabled, its position alternates depending on whether the page is odd or even.
-
-        \subsubsection{Footers}
-
-            In the first page, six elements display supplementary information for your document:
-
-            \begin{itemize}
-                \item \inlinecode{\journalname{}} — Displays the journal name, university, institute, company, or any institutional affiliation.
-                \item \inlinecode{\theday{}} — Displays the current date.
-                \item \inlinecode{\vol{}} — Specifies the volume number of the publication.
-                \item \inlinecode{\no{}} — Specifies the issue number within the volume.
-                \item \inlinecode{\journal{}} — Defines the full journal title.
-                \item \inlinecode{\thepage} — Shows the current page number and the total count.
-            \end{itemize}
-
-             In all cases, you can freely rearrange or customize the order of these elements by modifying the class file to suit your needs. If any of them are not required, simply omit the corresponding command — the remaining elements will automatically adjust their spacing to remain evenly distributed.
-
-\section{Rho Custom Packages}
-
-    \subsection{Rhobabel.sty}
-		
-		This package have all the commands that automatically translate from English to Spanish when this custom package is defined. 
-		
-		By default, this document has its content in English. However, at the beginning of the document you will find a recommendation when writing in Spanish. 
-		
-		You may modify this package if you want to use other language than English or Spanish. This will make easier to translate your document without having to modify the class document.
-
-    \subsection{Rhoenvs.sty}
-
-        This package provides custom environments designed to enhance the visual presentation and structure of your document. Key examples include rhoenv, info, and note.
-        
-		Their style is defined by \inlinecode{rhoenvstyle} — allowing you to customize their appearance according to your document’s requirements.
-
-		An example using the \inlinecode{rhoenv} environment is shown below.
-		
-		\begin{rhoenv}[frametitle=Custom Title]
-			This is an example of the custom title environment. To add a title type this command \verb|[frametitle=Custom Title]| next to the beginning of this environment (as shown in this example).
-		\end{rhoenv}
-
-        The \inlinecode{info} and \inlinecode{note} are environments which have a predefined title and translate their title to Spanish automatically when this language is defined.
-
-\section{Equations}
-
-	\equref{eq:equation} shows the Schrödinger equation as an example. 
-
-    \begin{equation}\label{eq:equation}
-        i\hbar \frac{\partial }{\partial t}\Psi(\mathbf{r},t) = \left[\frac{-\hbar^2}{2m}\nabla^2 + V(\mathbf{r},t) \right]\Psi(\mathbf{r},t)
-    \end{equation}
-	
-	The \inlinecode{amssymb} and \inlinecode{amsmath} packages were not required, as \href{https://ctan.org/pkg/stix2-otf/}{STIX2} font incorporates mathematical symbols for writing quality equations.
-	
-	\begin{note}
-		If you would like to change the values that adjust the spacing above and below the equations, change the \verb|\eqskip| value until the preferred spacing is set. The default value is set to 9pt.
-	\end{note}
-
-\section{Codes}
-
-	\subsection{Coding with Minted*}
-	
-		The \inlinecode{minted} package offers customized features for adding codes. In addition, the template is designed to work seamlessly with Fira Code, a monospaced font specially crafted for programming environments.
-
-        If your are using a desktop app as \href{https://www.texstudio.org/}{TeXstudio}, try these steps to make this package work on Windows:
-		
-		\begin{enumerate}
-			\item Install Python — A stable version (e.g., v.3.11)
-			\item Open the terminal and type \inlinecode{pip install Pygments}.
-			\item Update if a newer version is available.
-			\item Go to TeXStudio settings and change the default compiler to \inlinecode{pdflatex --shell-escape -interaction=nonstopmode \%.tex}.
-			\item Compile and wait for the result.
-		\end{enumerate}
-        
-		\vspace*{-9pt}
-        
-		\begin{rhoenv}[frametitle=Caution]
-			Ensure that \textbf{pygments} is properly installed and added to your system’s PATH. Otherwise, you may encounter compilation errors. Additionally, enable shell escape when compiling, as it is required for minted to process and highlight code.
-		\end{rhoenv}
-		
-		In \href{https://es.overleaf.com/}{Overleaf}, this package is easier to use since it does not require any additional installations or modifications — just add the code as shown in the example. \coderef{lst:example} shows a Python example.
-		
-		\begin{code}
-			\inputminted{python}{example.py}
-            \caption{Python code example with minted.}
-			\label{lst:example}
-		\end{code}
-		
-		You can customize its design changing \inlinecode{\usemintedstyle} command. The different styles offered by the \href{https://ctan.org/pkg/minted}{minted package} can be preview through this link — \url{https://pygments.org/styles/}.
-
-    \subsection{Coding with Listings}
-	
-		Since \inlinecode{minted} requires additional installations and can be complex in some desktop \TeX\ editors, you can use the \inlinecode{listings} package instead, which provides a simpler way to include code.
-		
-		\begin{code}
-			\lstinputlisting[language=python]{example.py}
-			\label{lst:example2}
-            \caption{Python code example with listings.}
-		\end{code}
-		
-		While \inlinecode{listings} is a simpler and widely supported package for code formatting, \inlinecode{minted} offers a more modern and powerful approach. It leverages the Pygments syntax highlighter to deliver superior coloring, language support, and styling options. One of its key advantages is the ability to easily switch between built-in color styles.
-		
-		In contrast, \inlinecode{listings} requires manual setup for colors, fonts, and formatting rules.
-		For users who prefer fine-tuned customization, the styling options for \inlinecode{listings} are organized in \inlinecode{rho.cls} file and can be modified at any time to suit individual preferences.
-
-	\subsection{Inline Code*}
-	
-		As shown in this template, inline code has a custom style for improved visual appeal. To use it, simply add \inlinecode{\inlinecode{}} command and place your code inside the braces.
-
-\section*{Numberless section}
-\addcontentsline{toc}{section}{Numberless section}
-
-    Declaring a numberless section automatically inserts a square symbol before the title. This unique feature is specific to first-level sections within this class.
-    
-    As this symbol also affects the table of contents and references titles, users who prefer to disable it may edit the section styling parameters in \inlinecode{rho.cls}.
-
-\section{Bibliography}
-		
-	Bibliography management is handled by \inlinecode{biblatex}, with the default citation and reference style set to IEEE. The \inlinecode{citestyle=numeric-comp} option is enabled, allowing multiple citations to be grouped within a single bracket (e.g., \cite{davis2023signalflow,bell2022codefont}). The citation format can be customized directly in \inlinecode{rho.cls} to suit any preferred style.
-
-\section*{FAQ}
-\addcontentsline{toc}{section}{FAQ}
-
-    \subsection*{How do I manage my references?}
-    \addcontentsline{toc}{subsection}{How do I manage my references?}
-        
-        To manage your references, I recommend using the tool \href{https://www.scribbr.es/citar/generador/folders/73QOXYsCwMRu4ifQaN65mx/lists/msTfx7GJjIAOUkufbISnA/}{scribbr}. You can simply enter the URL or create your own citation, and then export it to \LaTeX{} using the options in the three-dot menu.
-            
-        The generated citation can be copied and pasted into \inlinecode{rho.bib}, the file designated for bibliography management. You may rename this file, but if you do, remember to update the \inlinecode{\addbibresource} command in \inlinecode{rho.cls} under the biblatex section.
-    
-        \begin{note}
-            Some platforms, such as Google Scholar or scientific journals, provide citations directly in BibTeX format. Therefore, check if there is a ``how to cite this document'' section to streamline the citation process even further.
-        \end{note}
-
-        If you have any further questions, you can refer to the following page — \href{https://es.overleaf.com/learn/latex/Bibliography_management_with_biblatex}{Bibliography management with biblatex}.
-        
-    \subsection*{What should I do with the example files?}
-    \addcontentsline{toc}{subsection}{What should I do with the example files?}
-
-        The template includes sample content — such as an example figure, bibliography entries, and the \inlinecode{example.py} script — to demonstrate how the layout and features work. Once you start customizing the document for your own use, feel free to delete all example files and entries you don’t need.
-
-    \subsection*{How do I place equations easily?}
-    \addcontentsline{toc}{subsection}{How do I place equations easily?}
-
-        For equations, we have two options: inline or on its own line. For inline equations, simply place a dollar sign (\$) at the beginning and end of the equation. However, if you want the equation to be displayed on its own line, you need to use the equation environment.
-        
-        If you find it challenging to write formulas directly in \LaTeX, you can use text editors like Word. In the equations menu, you can select \LaTeX\ in the conversion section and copy and paste the equation you wrote into one of these two environments.
-
-    \subsection*{How do I change the paper size?}
-    \addcontentsline{toc}{subsection}{How do I change the paper size?}
-
-        By default, this class was adapted for a4paper and test it with letterpaper. The following paper sizes are available in \LaTeX:
-
-        \begin{itemize}
-            \item letterpaper (11 $\times$ 8.5 in)
-            \item legalpaper (14 $\times$ 8.5 in)
-            \item executivepaper (10.5 $\times$ 7.25 in)
-            \item a4paper (21 $\times$ 29.7 cm)
-            \item a5paper (21 $\times$ 14.8 cm)
-            \item b5paper (25 $\times$ 17.6 cm)
-       \end{itemize}
-
-\section*{Contact me}
-\addcontentsline{toc}{section}{Contact me}
-    
-    Have questions, suggestions, or an idea for a new feature? Found a bug or working on a project you’d like to invite me to?  
-    
-    Feel free to reach out — I’d be happy to help, collaborate, or fix the issue.  Your feedback helps me improve my templates!
-
-    \AtBeginEnvironment{tabular}{\normalsize\sffamily\selectfont}
-    \begin{center}
-        \setlength{\tabcolsep}{3pt}
-        \begin{tabular}{cl}
-            \faEnvelope & \href{mailto:memo.notess1@gmail.com}{memo.notess1@gmail.com} \\
-            \faGlobe{} & \href{https://memonotess1.wixsite.com/memonotess}{memonotess.com} \\
-            \faInstagram{} & \href{https://www.instagram.com/memo.notess/}{@memo.notess}
-        \end{tabular}
-    \end{center}
-
-\section*{Github Repository}
-\addcontentsline{toc}{section}{Github Repository}
-
-    Visit the repository to access the source code, track ongoing development, report issues, and stay up to date with the latest changes.
-
-    \begin{center}
-        \setlength{\tabcolsep}{3pt}
-        \begin{tabular}{cl}
-             \faGithub &  \url{https://github.com/MemoJimenez/Rho-class}\\
-        \end{tabular}
-    \end{center}
-
-\section*{Supporting}
-\addcontentsline{toc}{section}{Supporting}
-
-    Enjoyed this document class? Check out tau-class, my very first \LaTeX{} template.
-
-    \begin{center}
-        \setlength{\tabcolsep}{3pt}
-        \begin{tabular}{cl}
-             \faLink &  \href{https://es.overleaf.com/latex/templates/tau-class-lab-report-template/chhshmhxstsq}{https://es.overleaf.com/latex/templates/tau-class}\\
-        \end{tabular}
-    \end{center}
-    
-    \subsection*{Any contributions are welcome!}
-    \addcontentsline{toc}{subsection}{Any contributions are welcome!}
-    
-        Coffee keeps me awake and helps me create better \LaTeX\ templates. If you wish to support my work, you can do so through PayPal: 
-
-        \begin{center}
-            \setlength{\tabcolsep}{3pt}
-            \begin{tabular}{cl}
-                 \faPaypal & \textbf{\url{https://www.paypal.me/GuillermoJimeenez}}\\
-            \end{tabular}
-            \vskip9pt
-            Enjoy writing with rho-class!
-        \end{center}
-
-%----------------------------------------------------------
 
 \printbibliography
 
