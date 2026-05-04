@@ -23,8 +23,7 @@
 
 %----------------------------------------------------------
 
-\dates{This manuscript was compiled on April 15, 2026 \todo{remove?}}
-
+\dates{May 5, 2026}
 
 \docinfo{This document class was prepared on Overleaf and compiled with pdf\LaTeX{}. No errors were found during the compilation process. Rho-class supports external editors, though additional setup may be required.} 
 
@@ -50,17 +49,19 @@
 
 Surveys of "hard-to-reach" populations face an obstacle as these populations of interest that often face stigma, marginalization, or are otherwise rare, lack manageable sampling frames, and their members are too sparsely distributed in the general population to be reached efficiently through conventional survey design. New York City's jazz musicians constitute one such population. Introduced by Heckathorn (1997) to study this population, Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn (2004), Heckathorn (2002, 2007), and Volz and Heckathorn (2008), address this obstacle, as Gile and Handcock (2010) frame, in two main ways. First, RDS employs a chain-referral design by beginning from a convenience sample of "seed" respondents; each participant is given a small, fixed number of coupons to distribute to peers within the target population, who in turn recruit further participants, thus exploiting the social network of a given population to draw respondents. Second, by modeling the recruitment process as a Markov chain, where each participant recruits the next participant in their network at random, sufficient waves of recruitment will eventually reduce "seed bias" from the convenience sample, so RDS methods allow populations-level characteristics to be estimated. 
 
-The standard Volz-Heckathorn (2008) estimator estimates the population mean of a function $g(Y)$ as \todo{delete if already introduced}
-% TODO
+Relying on the Markov chain recrutiment process, the standard Volz-Heckathorn (VH) (2008) estimator thus estimates the population mean of a function $g(Y)$:
 
 \[
 \hat \mu_{VH} = \frac{\sum_{t = 1}^n \frac{g(Y_{i_t})}{d_{i_t}}}{\sum_{t = 1}^n \frac{1}{d_{i_t}}}.
 \]
 
-The VH estimator rests on several key assumptions: (i) the recruitment chain is long enough for the Markov chain to mix; (ii) respondents recruit uniformly at random from their network contacts; (iii) self-reported degree accurately reflects true network degree; (iv) the underlying network is connected and undirected; and (v) sampling with replacement, so that the same individual is not recruited twice. In practice, each of these assumptions faces empirical challenges..."
-We ask: which assumptions of RDS are met and violated in practice, and how well do existing and novel methods for adjusting bias account for these real-world results?
+The VH estimator rests on several key assumptions: (i) the recruitment chain must be long enough for the Markov chain to mix, i.e., the chain must run for more steps than the mixing time of the underlying network, so that the final distribution is approximately stationary and independent of the initial seeds; (ii) respondents must recruit uniformly at random from their network contacts, though in practice, homophily causes respondents to recruit disproportionately from within their own subcommunity, so that the recruitment chain behaves more like a walk confined to community subgraphs, with rare cross-community transitions; (iii) self-reported degree must accurately reflect true network degree, since $\hat{y}$ weights each observation by $1/d(i)$, so underreporting inflates weights while overreporting deflates them, introducing bias in the direction of correlation between misreporting with outcome $y$; (iv) the underlying network must be connected and undirected; (v) the random walk modeling lastly assumes sampling with replacement. \textbf{\color{red}{IS A SIXTH ASSUMPTION THAT PEOPLE ARE ACTUALLY REFERRING WITHIN-NETWORK? IE REFERRING NON-AI STUDENTS BIASES}}
 
-We have applied RDS to sample anti-AI Harvard undergraduates and better understand these undergraduates' perspectives on why they are anti-AI, building a graph model based on  data collected. Because self-identifying as \textit{anti-AI} often carries a negative connotation in particular academic contexts where AI has been adopted as a new norm as reflected in pejoratives like "luddite," we argue that RDS's confidentiality-preserving design is ideal. Throughout the following, \textit{anti-AI} is defined against \textit{not anti-AI}; . Furthermore, because anti-Ai students come from a variety of backgrounds and we hypothesize that such an attitude is sparse within a general population, we use RDS to exploit existing social network structure over other possible sampling schemes. If this were a social science paper, [why are anti-AI Harvard students, anti-AI would constitute our research question.] While we hope to provide some preliminary insight to this question, we are more interested in the survey methodology developed; 
+Failure to meet any of these assumptions contributes to seed bias into the final estimates. Assumptions (i) and (ii) contribute severely to bias in the presence of community bottlenecks, as homophilic recruitment keeps the walk within communities, and low conductance means that even a nominally long chain fails to cross community boundaries with sufficient frequency to wash out seed dependence. This motivates the block transition probability framework of Zhang et al. (2018) and their post-stratified (PS) estimator, which models inter-community recruitment rates and forms the basis for the bias-correction method we develop here. When the graph exhibits low conductance — when communities are connected by relatively few cross-community edges — the mixing time of the random walk grows large, and short recruitment chains remain concentrated near their starting seeds. This problem may be particularly pronounced in populations with natural subcommunity divisions, such as "concentration" and "house" in student population, where social ties are dense within subcommunities and sparse across them.
+
+We ask: which assumptions of RDS are met and violated in practice, and how well do existing and novel methods for adjusting bias account for these real-world results? In the process of accounting for homophily within subcommunity divisions, we extend the VH estimator to develop a novel re-weighting mechanism. 
+
+To asnwer this question, we have applied RDS to sample anti-AI Harvard undergraduates and better understand these undergraduates' perspectives on why they are anti-AI, building a graph model based on the data collected. We use RDS because self-identifying as \textit{anti-AI} often carries a negative connotation in particular academic contexts where AI has been adopted as a new norm as reflected in pejoratives like "luddite," and argue that RDS's confidentiality-preserving design is ideal. Throughout the following, \textit{anti-AI} is defined against \textit{not anti-AI}, requiring in-network participants to . Furthermore, because anti-Ai students come from a variety of backgrounds and we hypothesize that such an attitude is sparse within a general population, we rely on RDS to exploit existing social network structure over other possible sampling schemes. If this were a social science paper, why these anti-AI Harvard students are anti-AI would constitute our primary research question. While we hope to provide some preliminary insights to answering this question, we are more interested in methodological assumptions fulfilled and violated, and 
 
 \section{Existing Literature}
 
@@ -93,11 +94,11 @@ We propose a community-aware weighting scheme that generalizes the Volz-Heckatho
 Under strong homophily, the RDS process no longer behaves like a random walk that mixes between communities. Furthermore, opinions are often strongly correlated with community. Therefore, consecutive samples within the same community may carry less information about the overall population distribution, and cross-community referrals act as mixing events that carry disproportionately more information about population level distributions. 
 
 Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an ``echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
-\subsection{Proposed Estimator}
+\subsection{Proposed Estimator} \label{subsec:proposed_estimator}
 Formally, we consider a population represented by a network $G = (V, E),$ partitioned into $K$ communities $\mathcal{C} = \{1, 2, \ldots, K\}.$ Each individual $i \in V$ has both a community label $c(i) \in \mathcal{C}$ as well as exactly one of $I$ opinions, $Y_i \in \{1, 2, \ldots I\}.$ 
 Let the RDS process be defined as a sequence of referrals $\{i_t\}_{t = 1}^n,$ so the total sample size is $n.$
-The standard Volz-Heckathorn estimator estimates the population mean of a function $g(Y)$ as \todo{delete if already introduced}
-% TODO
+The standard Volz-Heckathorn estimator estimates the population mean of a function $g(Y)$ as
+% TODO delete if already introduced}
 
 \[
 \hat \mu_{VH} = \frac{\sum_{t = 1}^n \frac{g(Y_{i_t})}{d_{i_t}}}{\sum_{t = 1}^n \frac{1}{d_{i_t}}}.
@@ -167,6 +168,8 @@ We define the effective sample size $n_{eff}$ as the number of independent sampl
 \textbf{\color{red} Can add the MSE thing here. With bias-variance tradeoff.}
 This value of $\alpha^*$ makes sense in limiting cases: when $\rho = 0,$ all samples are important because intra-community referrals are as informative as any referral; this gives $\alpha^* = 1$ as expected. When $k = 1,$ we have $\alpha^* = 1$ which again makes sense because the original entry into a community shouldn't be downweighted. Finally, when $\rho, k$ are both large, then $\alpha^* \to 0$ which is logical because with high correlation and high homophily, new referrals within the same community are less informative and should be discounted at a higher rate.
 
+\textbf{\color{red} talk about how $k$ is computed}
+
 The above derivation is dependent on assumptions like communities being observed, correlation primarily being driven by community (which appears in the formulation for $g(Y_i)$), and the sampling structure being well-approximated by runs of consecutive samples in a single community of typical length $k.$
 
 \section{Empirical Testing}
@@ -195,16 +198,27 @@ We first see a single result of the SBM graph generation and estimator correctio
 \midrule
 Sample Frequency vs.~Population & 0.287278 \\
 VH vs.~Population & 0.132597 \\
-Adjusted vs.~Population & 0.053308 \\
+Adjusted VH vs.~Population & 0.053308 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
 Unsurprisingly, the raw sampled frequencies show the largest deviation from true population distribution. The Volz-Heckathorn estimate reduces error by accounting for degree-related sampling bias, but still performs worse than the adjusted estimator that we proposed. This single-trial result is consistent with our hypothesis that explicitly accounting for community-related correlation can reduce the distributional bias more than the vanilla Volz-Heckathorn estimator. 
 
-\textbf{\color{red} I have a plot for this that might be useful, 
-% \verb|img/single_trial_alpha_vs_kl.pdf|
-}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{img/single_trial_alpha_vs_kl.pdf}
+    \caption{Setting $\alpha = \alpha^*$ reduces KL divergence compared to $\alpha = 1$, the vanilla Volz-Heckathorn estimator.}
+    \label{fig:single_trial}
+\end{figure}
+
+We now consider a larger experiment of 100 samples; each sample is generated independently with the same SBM generation and RDS simulation as in the previous part. In each trial, we compare the KL divergence of the estimator at $\alpha = 1$ (no adjustment to Volz-Heckathorn) with the KL divergence at $\alpha = \alpha^*,$ with $\alpha^*$ as found by our heuristic in \ref{subsec:proposed_estimator}. Specifically, we compute the difference
+
+\[
+D_{KL}(P \| \hat P_{\alpha = 1}) - D_{KL}(P \| \hat P_{\alpha^*})
+\]
+
+\noindent so a positive value means that an improvement has occurred using $\alpha^*,$ and larger values mean greater reduction in distributional error achieved by the proposed method.
 
 \textbf{\color{red} talk about unrealistic thigns that we did. eg everyone referred 2 nodes (until the end was reached)}
 
