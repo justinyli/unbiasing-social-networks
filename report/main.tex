@@ -76,21 +76,15 @@ Failure to meet any of these assumptions contributes to bias into the final esti
 We are interested in investigating specifically how assumption ii, uneven recruitment under homophily, holds up in practice, and how it might be addressed if unmet. In this paper, we ask: \textbf{which assumptions of RDS are met and violated in practice, and how well do existing and novel methods for adjusting bias account for these real-world results?} \textbf{\color{red} Lets come back to this at the end and make sure this is the precise question we want to ask.} Indeed, how might we de-bias our sample in situations of non-mixing? In the process of accounting for homophily within communities, we extend the VH estimator to develop a novel re-weighting mechanism. 
 
 \section{Our Experiment}
-In order to explore our research question about RDS in practice, we utilized RDS to sample anti-AI Harvard undergraduates and better understand these undergraduates' perspectives on \textbf{why} they are anti-AI, building a graph model based on the data collected.
+Artificial Intelligence (AI) has been a massively transformative and fast-moving technology since the initial release of ChatGPT in 2022. A recent Crimson study found that on average, "students say they use artificial intelligence to complete 34.5 percent of their homework" (Crimson). Given this rapid rollout and adoption of AI, the question of whether or not this technology should exist or be embraced at all are overshadowed by the preeminence of technological accelerationism. Thus, we believe it is interesting and important to give voice to those who oppose AI in order to illuminate alternative viewpoints. Throughout the following, we define \textit{anti-AI} against \textit{not anti-AI}, requiring in-network participants to "opt-in" to the label.
 
-Why is this interesting?
-- AI is big topic of conversation, going to reshape economy/world and also harvard itself (new grading policy mention of AI?) so it's important to get a sense of the perspectives of people who are against this technology because they're often overshadowed by various pro-AI perspectives
+There are several challenges to studying Anti-AI Harvard students as a target population in practice. For one, Anti-AI students are a small population -- In the Crimson's AI study, they found only around 6\% of their 300 students surveyed do not use generative AI services. Thus, we can extrapolate that the proportion of Harvard students who are Anti-AI is relatively small, and thus collecting data on these students from a random sample would be extremely difficult. Moreover, the identity of Anti-AI is stigmatized, especially in particular academic contexts where AI has been adopted as a new norm and reflected in pejoratives like "Luddite." We also assume this population will be practically hard to reach because they're more likely to be broadly anti-technology and less trusting of institutions and data collection. Lastly, we assume that Anti-AI Harvard students exist within a relatively well-connected social network.
 
-Why does RDS fit?
-- Anti-AI is a small population (crimson study: the Crimson recently released a survey indicating that among 300 students, approximately 6\% do not use generative AI services)
-- Anti-AI is stigmatized (so hard to answer directly)
-- Anti-AI is hard to reach (since they're broadly anti-tech)
-- We assume these people are friends
+All of these assumptions make Anti-AI Harvard students an appropriate target population to study with RDS: Though they are difficult to study via random sampling, due to small population size and identity stigmatization, their social networks should allow us to utilize referral sampling in order to reach a sufficient number of students to collect and estimate on meaningful data.
 
-\subsection{Challenges?}
-The population of Harvard undergraduates who self-identify as \textit{anti-AI} is blurry and undefined. Throughout the following, we define \textit{anti-AI} against \textit{not anti-AI}, requiring in-network participants to "opt-in" to the label. RDS's preservation of confidentiality is salient here because self-identifying as \textit{anti-AI} often carries a stigmatized connotation (perhaps reflecting an irrational approach to technological developments), especially in particular academic contexts where AI has been adopted as a new norm and reflected in pejoratives like "Luddite." 
-% let's go, glad we got this one in here
-Furthermore, because anti-Ai students come from a variety of backgrounds and we hypothesize that such an attitude is sparse within a general population, we rely on RDS to exploit existing social network structure over other possible sampling schemes. If this were a social science paper, why these anti-AI Harvard students are anti-AI would constitute our primary research question. While we hope to provide some preliminary insights to answering this question through the building of our model, we are more interested in understanding which methodological assumptions can be met in practical applications of RDS and how we might address the violation of our assumptions, particularly that of (i) mixing and (2) uniform recruitment.
+Thus, in order to explore our research question about RDS in practice, we utilized RDS to sample anti-AI Harvard undergraduates and better understand these undergraduates' perspectives on \textbf{why} they are anti-AI, building a graph model based on the data collected.
+
+If this were a social science paper, why these anti-AI Harvard students are anti-AI would constitute our primary research question. While we hope to provide some preliminary insights to answering this question through the building of our model, we are more interested in understanding which methodological assumptions can be met in practical applications of RDS and how we might address the violation of our assumptions, particularly that of (i) mixing and (ii) uniform recruitment.
 
 \section{Existing Literature}
 Literature on RDS acknowledges both its usefulness in accessing hard to reach populations and three fundamental difficulties:
@@ -122,7 +116,13 @@ https://arxiv.org/abs/1812.01188
     
     data cleaning like how we grouped multiple majors into fewer categories, and why some of these groupings are valid (both from a size perspective and ideology perspective. ideally each of the formed groups should have an equal size)
 
+Our survey consists of the following questions: 
+Do you consider yourself anti-AI? 
+Why are you anti-AI? Please choose the response that most closely reflects your opinion. 
+
+
 In designing our survey of anti-AI Harvard students, we employed several strategies discussed and modeled in the literature in order to mitigate bias. 
+
 \subsection{Seed bias}
 To mitigate seed bias, we chose seeds from across houses, concentrations, and years.
 
@@ -294,12 +294,34 @@ The resulting histogram is shown in Fig \ref{fig:kl_histogram}. Across the 100 t
 
 \section{Application on Data}
 We collected 41 samples of individuals with anti-AI sentiment. 
-First, we see that anti-AI sentiment is primarily for economic, interpersonal, and environmental reasons, with trust and security being a minor reason. 
-\textbf{\color{red} include plot
-% ../img/anti_ai_reasons_pie_chart.pdf
-}
+First, we see in Fig \ref{fig:anti_ai} that anti-AI sentiment is primarily for economic, interpersonal, and environmental reasons, with trust and security being a minor reason. 
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/anti_ai_reasons_pie_chart.pdf}
+    \caption{Distribution of reasons for being anti-AI.}
+    \label{fig:anti_ai}
+\end{figure}
 
+Next, we see distributions across covariates like year, gender, and house in Fig \ref{fig:covar_distr}. Upperclassmen are more represented in the sample, which is likely due to seed selection effects (we knew more upperclassmen who were anti-AI, so more upperclassmen served as seeds) and propagation through the referral process. Additionally, the sample contains a higher proportion of women relative to other gender categories. In contrast, the distribution of responses across houses is relatively even.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/survey_demographics.pdf}
+    \caption{Distribution of respondents across year, gender, and house.}
+    \label{fig:covar_distr}
+\end{figure}
+
+Finally, we see a distribution of respondents over concentration grouped by field in Fig \ref{fig:grouped_concentration}. We group the concentrations according to Harvard's own designation \cite{Harvard_College}. The resulting distribution is relatively even across the three major groups, which is helpful because it will ensure no single academic division disproportionately drives the composition of the sample, and it also means that some amount of mixing has already occurred in the RDS survey run. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/grouped_concentration_distribution.pdf}
+    \caption{Concentration grouped by field.}
+    \label{fig:grouped_concentration}
+\end{figure}
+
+Finally, we see the resulting network generated by RDS, clustered and colored by wave at which each individual was recruited in \ref{fig:RDS_network}. Clearly, sampling process does not form a fully expanding referral tree as we hoped. Many participants (including some seeds) do not refer any additional individuals, meaning making recruitment chains terminate early. As a result, the realized sample likely has uneven coverage of the underlying population. 
 
 
 
