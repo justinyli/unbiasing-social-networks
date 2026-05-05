@@ -45,7 +45,16 @@
 
 \section{Introduction and Motivation}
 
-Surveys of "hidden" or "hard-to-reach" populations face obstacles as these populations of interest, which often face stigma, marginalization, or are otherwise rare, lack manageable sampling frames where the size and boundaries of the population are unknown, their members are too sparsely distributed in the general population to be reached efficiently through conventional survey design, and there exist privacy concerns that may result in refusal to participate or unreliable answers. Drug injectors in Connecticut constitute one such population. Introduced by Heckathorn (1997)~\cite{heckathorn1997respondent} to study this population's characteristics, Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn (2004), Heckathorn (2002, 2007)~\cite{heckathorn2002respondent} ~\cite{heckathorn2007extensions}, and Volz and Heckathorn (2008)~\cite{volz2008probability}, address these obstacles, as Gile and Handcock (2010)~\cite{gile2010respondent} frame, through innovating in two areas: \textbf{survey design} and \textbf{inference}. 
+Surveys of "hidden" or "hard-to-reach" populations face obstacles as these populations of interest, which often face stigma, marginalization, or are otherwise rare, lack manageable sampling frames where the size and boundaries of the population are unknown, their members are too sparsely distributed in the general population to be reached efficiently through conventional survey design, and there exist privacy concerns that may result in refusal to participate or unreliable answers. Drug injectors in Connecticut constitute one such population. Introduced by Heckathorn~\cite{heckathorn1997respondent} %(1997)
+to study this population's characteristics, Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn 
+%(2004)
+, Heckathorn ~\cite{heckathorn2002respondent} ~\cite{heckathorn2007extensions}
+%(2002, 2007)
+, and Volz and Heckathorn 
+%(2008)
+~\cite{volz2008probability}, address these obstacles, as Gile and Handcock~\cite{gile2010respondent}
+%(2010)
+ frame, through innovating in two areas: \textbf{survey design} and \textbf{inference}. 
 
 \subsection{Survey Design}
 The first innovation of RDS is its survey design, whose affordances mitigate some of the challenges of studying hard to reach populations. RDS employs a chain-referral design by beginning with a convenience sample of "seed" respondents in the target population; each participant is given a small, fixed number of coupons to distribute to peers also within the target population, who in turn recruit further participants, circumventing the absence of a sampling frame by replacing it with the social network of the population itself. Rather than searching for rare individuals through a broad population frame, RDS enables researchers to leverage the existing social ties of population members who would be prohibitively difficult to locate otherwise. Moreover, RDS' coupon mechanism removes the need for researchers to directly identify or contact members of a stigmatized population, reducing the confidentiality risks that typically depress participation by operationalizing the social trust that exists within the target population. 
@@ -71,7 +80,7 @@ The VH estimator rests on several key assumptions:
     \item The random walk modeling lastly assumes sampling with replacement, though we can safely sample without replacement if the sampling fraction is very small.
 \end{enumerate}
 
-Failure to meet any of these assumptions contributes to bias into the final estimates. Assumptions (i) and (ii) contribute severely to bias in the presence of community bottlenecks, as homophilic recruitment keeps the walk within communities, and low conductance means that even a nominally long chain fails to cross community boundaries with sufficient frequency to wash out seed dependence. \textbf{\color{red} Should we talk about SH estimator here too?} This motivates the block transition probability framework of Zhang et al. (2018)~\cite{zhang2018post} and their post-stratified (PS) estimator, which models inter-community recruitment rates and forms the basis for the bias-correction method we develop here. When the graph exhibits low conductance -- when communities are connected by relatively few cross-community edges -- the mixing time of the random walk grows large, so short recruitment chains remain concentrated near their starting seeds. This problem may be particularly pronounced in populations with natural community divisions, such as "concentration" and "house" in student population, where social ties are dense within communities and sparse across them, exacerbating the "echo-chamber" effect where participants with similar covariates share the same opinion and will send the survey to friends with similar covariates.
+Failure to meet any of these assumptions contributes to bias into the final estimates. Assumptions (i) and (ii) contribute severely to bias in the presence of community bottlenecks, as homophilic recruitment keeps the walk within communities, and low conductance means that even a nominally long chain fails to cross community boundaries with sufficient frequency to wash out seed dependence. \textbf{\color{red} Should we talk about SH estimator here too?} This motivates the block transition probability framework of Zhang et al. ~\cite{zhang2018post} and their post-stratified (PS) estimator, which models inter-community recruitment rates and forms the basis for the bias-correction method we develop here. When the graph exhibits low conductance -- when communities are connected by relatively few cross-community edges -- the mixing time of the random walk grows large, so short recruitment chains remain concentrated near their starting seeds. This problem may be particularly pronounced in populations with natural community divisions, such as "concentration" and "house" in student population, where social ties are dense within communities and sparse across them, exacerbating the "echo-chamber" effect where participants with similar covariates share the same opinion and will send the survey to friends with similar covariates.
 
 We are interested in investigating specifically how assumption ii, uneven recruitment under homophily, holds up in practice, and how it might be addressed if unmet. In this paper, we ask: \textbf{which assumptions of RDS are met and violated in practice, and how well do existing and novel methods for adjusting bias account for these real-world results?} \textbf{\color{red} Lets come back to this at the end and make sure this is the precise question we want to ask.} Indeed, how might we de-bias our sample in situations of non-mixing? In the process of accounting for homophily within communities, we extend the VH estimator to develop a novel re-weighting mechanism. 
 
@@ -129,10 +138,10 @@ To identify possible covariates, we asked each participant for their name, polit
 % While we considered allowing participants anonymity as part of RDS' confidentiality-preserving properties, we decided that based on our research question, the demographic information provided, and our desire to minimize survey length to maximize participation, it made more sense practically to ask for each participant's full name and for information not otherwise available on the database. 
 % Not sure we need this?
 
-These co-variates were then cleaned and grouped. Houses were grouped into the roughly equal four house neighborhoods of Quad, River West, River Central, and River East (Dudley was included in Quad). We grouped concentrations into the three categories of Arts \& Humanities, Social Sciences, and Sciences, which is a taxonomy defined by Harvard \cite{Harvard_College}. We believe that these groups will help maintain possible correlates to Anti-AI Rationale, as students overall orientation towards sciences, humanities, or social science informs their worldview and perspectives on new technology. These groupings also maintain roughly balanced sizes, which is especially important given our studies' limited sample size.
+These co-variates were then cleaned and grouped. Houses were grouped into the roughly equal four house neighborhoods of Quad, River West, River Central, and River East (Dudley was included in Quad). We grouped concentrations into the three categories of Arts \& Humanities, Social Sciences, and Sciences, which is a taxonomy defined by Harvard \cite{Harvard_College}, and students were assigned to a category based on their primary concentration. We believe that these groups will help maintain possible correlates to Anti-AI Rationale, as students overall orientation towards sciences, humanities, or social science informs their worldview and perspectives on new technology. These groupings also maintain roughly balanced sizes, which is especially important given our studies' limited sample size.
 
 \subsection{Degree Estimation}
-We also collected data about the user's degree within the Anti-AI network. This is important in order to later correct for degree, as RDS is biased towards well-connected nodes who are more likely to be referred. Because the accuracy of self-reported degree can be a source of error in RDS, we made sure to follow best practices to create a question that lends itself to accurate self-reporting. As is explained in the paper [Evaluation of Respondent-driven Sampling 2012]~\cite{mccreesh2012evaluation}, it is important to ask a specific, measurable proxy question to obtain a relative measure of in-network degree. We arrived at the question: "To the best of your knowledge, what is the number of known anti-AI Harvard students you've communicated with in the last week?". This prevents respondents from lazily overestimating their degree as "communicated with in the last week" enforces a lower bound on the substance of the relation. We also guard against inflation of degree by making sure the potential referees are "known" to be anti-AI. We assume that the risks to underestimate one's degree are low so that these two safeguards only contribute to bias reduction.
+We also collected data about the user's degree within the Anti-AI network. This is important in order to later correct for degree, as RDS is biased towards well-connected nodes who are more likely to be referred. Because the accuracy of self-reported degree can be a source of error in RDS, we made sure to follow best practices to create a question that lends itself to accurate self-reporting. As is explained in \cite{mccreesh2012evaluation}, it is important to ask a specific, measurable proxy question to obtain a relative measure of in-network degree. We arrived at the question: "To the best of your knowledge, what is the number of known anti-AI Harvard students you've communicated with in the last week?". This prevents respondents from lazily overestimating their degree as "communicated with in the last week" enforces a lower bound on the substance of the relation. We also guard against inflation of degree by making sure the potential referees are "known" to be anti-AI. We assume that the risks to underestimate one's degree are low so that these two safeguards contribute only to bias reduction.
 
 \subsection{Referrals}
 Lastly, each participant was asked to send the survey to up to three participants and provide the full name of those referred. In constructing our referral question, we attempted to lower the bias arising from preferential referrals within networks by asking respondents to "Please \textbf{randomly} choose up to three anti-AI Harvard undergraduates you know to refer for this survey." Nevertheless, we recognize that preferential recruitment likely still occurred.
@@ -169,7 +178,7 @@ Finally, we see a distribution of respondents over concentration grouped by fiel
     \label{fig:grouped_concentration}
 \end{figure}
 
-Finally, we see the resulting network generated by RDS, clustered and colored by wave at which each individual was recruited in \ref{fig:RDS_network}. Clearly, sampling process does not form a fully expanding referral tree as we hoped. Many participants (including some seeds) did not refer any additional individuals, and many recruited , meaning making recruitment chains terminate early. As a result, the realized sample likely has uneven coverage of the underlying population. 
+Finally, we see the resulting network generated by RDS, clustered and colored by wave at which each individual was recruited in \ref{fig:RDS_network}. Clearly, sampling process does not form a fully expanding referral tree as we hoped. Many participants (including some seeds) did not refer any additional individuals, and many recruited individuals did not respond to our survey, meaning many recruitment chains terminate early. As a result, the realized sample likely has uneven coverage of the underlying population. 
 
 \begin{figure}
     \centering
@@ -180,13 +189,15 @@ Finally, we see the resulting network generated by RDS, clustered and colored by
 
 \section{Methodology}
 \subsection{Intuition}
-We propose a community-aware weighting scheme that generalizes the Volz-Heckathorn estimator by downweighting consecutive same-community referrals, which is motivated by homophily in RDS chains causing referrals to have similar responses, especially when the referred respondent is in the same community as the referrer. \textbf{\color{red}we can include that we have very limited waves here, too?}
-Under strong homophily, the RDS process no longer behaves like a random walk that mixes between communities. Furthermore, opinions are often strongly correlated with community. Therefore, consecutive samples within the same community may carry less information about the overall population distribution, and cross-community referrals act as mixing events that carry disproportionately more information about population level distributions. 
+We propose a community-aware weighting scheme that generalizes the Volz-Heckathorn estimator by downweighting consecutive same-community referrals, which is motivated by homophily in RDS chains causing referrals to have similar responses, especially when the referred respondent is in the same community as the referrer.
 
-Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an ``echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
+Under strong homophily, the RDS process no longer behaves like a random walk that mixes between communities. Furthermore, opinions are often strongly correlated with community. \textbf{\color{red}can we support these two claims w our data?} Therefore, consecutive samples within the same community may carry less information about the overall population distribution, and cross-community referrals act as mixing events that carry disproportionately more information about population level distributions. 
+
+Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an "echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. textbf{\color{red}If we want to talk about the other estimators, i think this owuld be the palce to explain how they are worse than our new estimator}. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
+
 \subsection{Proposed Estimator} \label{subsec:proposed_estimator}
 Formally, we consider a population represented by a network $G = (V, E),$ partitioned into $K$ communities $\mathcal{C} = \{1, 2, \ldots, K\}.$ Each individual $i \in V$ has both a community label $c(i) \in \mathcal{C}$ as well as exactly one of $I$ opinions, $Y_i \in \{1, 2, \ldots I\}.$ 
-Let the RDS process be defined as a sequence of referrals $\{i_t\}_{t = 1}^n,$ so the total sample size is $n.$ We propose to downweight within-community referrals; that is,
+Let the RDS process be defined as a sequence of referrals $\{i_t\}_{t = 1}^n,$ so the total sample size is $n$. We propose to downweight within-community referrals; that is,
 
 \begin{equation}\label{eq:main_estimator}
 w_t(\alpha) = \frac{1}{d_{i_t}} \cdot \alpha^{I(c(i_t) = c(i_{t - 1}))}
@@ -200,17 +211,17 @@ w_t(\alpha) = \frac{1}{d_{i_t}} \cdot \alpha^{I(c(i_t) = c(i_{t - 1}))}
 
 \noindent Note that letting $\alpha = 1$ recovers the standard Volz-Heckathorn estimator.
 
-The optimal $\alpha$ should then be determined by community dependence; that is, the correlation of opinions within the same community and the homophily in the network. With high correlation and high homophily, referrals within the same community are likelier to lead to redundant information, meaning that $\alpha$ should be smaller. When correlation and homophily are low, then within-community samples still remain informative, so $\alpha \approx 1.$
+The optimal $\alpha$ should then be determined by community dependence; that is, the correlation of opinions within the same community and the homophily in the network. With high correlation and high homophily, referrals within the same community are likelier to lead to redundant information, meaning that $\alpha$ should be smaller. When correlation and homophily are low, then within-community samples still remain informative, so $\alpha \approx 1$.
 
-We now formally derive an estimate for $\alpha.$ Suppose that for each individual $i,$ we have
+We now formally derive an estimate for $\alpha$. Suppose that for each individual $i$, we represent the individual's outcome as being composed of global, community, and individual perspectives:
 
 \[
 g(Y_i) = \mu + \gamma_{c(i)} + \epsilon_i
 \]
 
 % TODO reword below
-\noindent with $\mu$ representing a global opinion, $\gamma_{c(i)}$ representing the community specific opinion, and $\epsilon_i$ a user-level noise term. Let $E[\gamma_{c(i)}] = 0$ and $E[\epsilon_i] = 0,$ and also let $\text{Var}(g(Y_i)) = \sigma^2_\gamma + \sigma^2_\epsilon.$ Define the intra-community correlation as $\rho := \frac{\sigma^2_\gamma}{\sigma^2_\gamma + \sigma^2_\epsilon};$ it represents the proportion of variance explained by community-level opinions.
-Then for two nodes $i, j,$
+\noindent with $\mu$ representing a global component of outcome, $\gamma_{c(i)}$ representing the community-specific opinion, and $\epsilon_i$ a user-level noise term. Let $E[\gamma_{c(i)}] = 0$ and $E[\epsilon_i] = 0,$ and also let $\text{Var}(g(Y_i)) = \sigma^2_\gamma + \sigma^2_\epsilon.$ Define the intra-community correlation as $\rho := \frac{\sigma^2_\gamma}{\sigma^2_\gamma + \sigma^2_\epsilon}$. This represents the proportion of variance explained by community-level opinions.
+Then for two nodes $i, j$, we have:
 
 \[
 \text{Cov}(g(Y_i, Y_j)) = \begin{cases}
@@ -328,10 +339,6 @@ The resulting histogram is shown in Fig \ref{fig:kl_histogram}. Across the 100 t
     \label{fig:kl_histogram}
 \end{figure}
 
-\textbf{\color{red} can make a graph of KL divergence difference over different correlational values}
-
-\textbf{\color{red} talk about unrealistic thigns that we did. eg everyone referred 2 nodes (until the end was reached). maybe $\alpha$ should depend on seed nodes and size of samples.}
-
 \section{Application on Data}
 
 \subsection{Application of Proposed Methodology}
@@ -343,7 +350,7 @@ To estimate $p_{in}$ and $p_{out},$ we use the observed RDS recruitment edges. L
 \hat p_{in} = \frac{E_{in}}{E_{in} + E_{out}}, \hat p_{out} = \frac{E_{out}}{E_{in} + E_{out}}.
 \]
 
-\noindent Of course, these probabilities are not literal SBM edge probabilities, but instead an empirical measure of tendency of within-community recruitment. However, it is impossible for us to recover the true underlying friendship network, and therefore we'll treat $\hat p_{in}$ as the intracommunity connection probability of an SBM. \textbf{\color{red} might want to say more about that}
+\noindent Of course, these probabilities are not literal SBM edge probabilities, but instead an empirical measure of tendency of within-community recruitment. However, it is impossible for us to recover the true underlying friendship network, and therefore we'll treat $\hat p_{in}$ as the intracommunity connection probability of an SBM.
 Running this algorithm gives $\hat p_{in} = 0.555.$
 
 Next, we estimate $\rho,$ the correlation of an individual's opinion with the dominant opinion of the community. For each community, we first identify the dominant opinion as the most common response of those community members. We then compute the fraction of individuals whose opinion matches the dominant opinion. Formally, if $o_i$ is the opinion of individual $i$ and $o^*(c(i))$ is the dominant opinion of community $c(i),$ then
@@ -364,8 +371,15 @@ The moderate estimates of $\hat p_{in}$ and $\hat \rho$ indicate that while ther
     \label{fig:RDS_estimator_comparison}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/vh_vs_alpha_neighborhood.pdf}
+    \caption{Distribution of opinions by neighborhood when weighted with Volz-Heckathorn vs.~our proposed method. Using $\alpha$-weighting gives more similar distributions between the four neighborhoods.}
+    \label{fig:VH_vs_alpha_by_neighborhood}
+\end{figure}
+
 We next perform robustness checks of our method. While we do not know the true distribution of beliefs among the Harvard undergraduate population, we will evaluate our $\alpha$-weighted correction by cross-neighborhood heterogeneity. Specifically, we expect that anti-AI reasoning should be independent of one's physical living neighborhood. Therefore, systematic differences in observed opinion distribution across neighborhoods are more likely due to errors in sampling than due to actual variation in beliefs. 
-Under this interpretation, a desirable effect of our estimator is to reduce variation in conditional distributions across neighborhoods. As we can see in Fig \ref{fig:asdfasdfasdf}, using our methodology makes distribution of opinion more similar across neighborhoods. To quantify this effect, we measure the dispersion of neighborhood-level distributions relative to the overall distribution generated for each estimator method. Specifically, for each neighborhood, we compute the squared $\ell_2$ distance between its opinion distribution and the global average distribution, and then average this quantity across neighborhoods; we do this for raw sample, the Volz–Heckathorn estimator, and our $\alpha$-adjusted estimator.
+Under this interpretation, a desirable effect of our estimator is to reduce variation in conditional distributions across neighborhoods. To investigate this, we consider the distribution of opinion in each neighorhood, but we weight opinion using weights from Volz-Heckathorn or our proposed $\alpha$-weighting method. As we can see in Fig \ref{fig:VH_vs_alpha_by_neighborhood}, using our methodology makes distribution of opinion more similar across neighborhoods. To quantify this effect, we measure the dispersion of neighborhood-level distributions relative to the overall distribution generated for each estimator method. Specifically, for each neighborhood, we compute the squared $\ell_2$ distance between its opinion distribution and the global average distribution, and then average this quantity across neighborhoods; we do this for raw sample, the Volz–Heckathorn estimator, and our $\alpha$-adjusted estimator.
 
 \begin{table}[h]
 \centering
@@ -385,24 +399,18 @@ $\alpha$-weighted & 0.0326 \\
 
 As seen in Table \ref{tab:neighborhood_dispersion}, the $\ell_2$ dispersion increases when applying the Volz–Heckathorn estimator relative to the raw sample, meaning degree-based reweighting can amplify differences in opinion distributions across neighborhoods. However, our $\alpha$-weighted estimator gives lowest dispersion among the three, meaning that heterogeneity across the four neighborhoods has been reduced. This gives evidence that RDS does indeed introduce dependence on clustering that cannot be addressed by degree correction alone, and our $\alpha$ adjustment can partially correct for sampling biases by making neighborhood-level distributions more similar.
 
-
-\textbf{\color{red} Both $\hat\rho$ and $\hat p_{in}$ don't really meet what we're looking for.}
-\textbf{\color{red} Issues with data: people can be part of multiple concentrations}
-		
-Once we reweight the data by alpha, we get a a distribution that we believe more closely
-estimates the true distribution of responses among our community in question (Luddites at Harvard). By the nature of our undertaking, we do not know the true distribution, but do have knowledge about the covariate pool that should be represented in the true distribtution of luddites, namely that house affiliation is independent of response and of being a luddite, so we expect a uniform distribution of houses through each bucket of the survey. 
-
-We compare our reweighted covariate pool with the unweighted pool and do indeed that we get closer to uniform
-
-\includegraphics[width=\linewidth]{img/house_comparison_side_by_side.pdf}
-
-
-But not in any significant way. Hence, we conclude that our data does not fit our assumptions well enough to be applicable.
-
 \section{Future Directions}
+Our proposed $\alpha$-weighted correction demonstrates promise in making distributions more similar to population-level ones and reducing spurious heterogeneity induced by the RDS sampling process. In particular, our robustness check show that the method can mitigate cross-neighborhood variation due to recruitment dependence. However, as observed in our simulation studies, the magnitude of these improvements is often modest. In many graphs, especially those that have moderate homophily and weak correlation between outcome and network structure, the Volz-Heckathorn estimator already reduces the majority of sampling bias, leaving limited scope for additional corrections. The practical gains from adjustments are inherently data-dependent and are small in well-mixed populations.
 
-want some more formality on $\alpha.$ Test on more values of $p, q;$ see when this works and doesn't work. 
-	
+A key direction for future work is to relax several strong assumptions underlying our framework. First, the derivation of $\alpha^*$ relies on very many simplified structural assumptions about the sampling process, including approximations to referral dynamics and the use of summary parameters such as $\hat{\rho}$ and $\hat{p}_{in}$. These quantities are themselves estimated from data and may be sensitive to model specification and sampling variability, and the estimations of these parameters could also be made more precise. Additionally, our formulation implicitly assumes a relatively homogeneous referral mechanism, such as individuals referring a fixed or similar number of peers, which does not hold in practice as observed in our data where some individuals made no referrals.
+
+Furthermore, our model treats individuals as belonging to a single latent community, whereas an individual may be part of multiple communities (e.g.~by being a double concentrator). Using only groups of academic concentration may be too strong and unrealistic of a simplification, because many other factors like social network and background presumably factor into one's opinions. Extending the framework to account for overlapping or mixed community membership would allow for a more realistic representation of the underlying network and may improve the accuracy of dependence corrections.
+
+More broadly, these results indicate that while correcting for sampling bias in certain regimes is theoretically important, its empirical impact depends substantially on network structure and the outcome's relationship to the network structure. Future work could focus on identifying regimes in which such corrections are most beneficial, as well as developing adaptive methods that adjust the strength of correction based on observed network properties.
+
+Our methodology provides a step toward incorporating explicitly covariate dependence-aware corrections into RDS estimation, but further work is needed to relax simplifying assumptions, better estimate underlying structural parameters, and understand when such corrections make meaningful improvements.
+
+\newpage
 
 \printbibliography
 
