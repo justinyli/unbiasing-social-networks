@@ -107,12 +107,13 @@ If this were a social science paper, why these anti-AI Harvard students are anti
 
 
 \section{Survey Design and Data Processing}
+Using RDS, we attempted to ask why anti-AI undergraduates were anti-AI. We selected 13 seed nodes and sent them our anti-AI survey. Each respondent was invited to send the survey to up to three referrals. We attempted to mitigate seed bias by choosing seeds across houses, concentrations, and class years. \textbf{\color {red}MAYBE WE CAN INCLUDE APPENDIX NOTE HERE FOR SEED NODES?} The survey itself consists of five sections: eligibility, anti-AI rationale, demographics, degree estimation, and referral. 
 
-Using RDS, we attempted to ask why anti-AI undergraduates were anti-AI. We selected 13 seed nodes and sent them our anti-AI survey. Each respondent was invited to send the survey to up to three referrals. We attempted to mitigate seed bias by choosing seeds across houses, concentrations, and class years. \textbf{\color {red}MAYBE WE CAN INCLUDE APPENDIX NOTE HERE FOR SEED NODES?} The survey itself consists of four sections: eligibility, anti-AI rationale, demographics, degree estimation, and referral. 
+\subsection{Eligibility} 
+All participants were asked if they identified as anti-AI; an affirmative response was required to proceed through the rest of the survey. 5 of 46 participants (10.9\%) did not identify as anti-AI. While they were included in our dataset, their information was not used to build our model as they fell outside the population of interest. 
 
-\subsection{Eligibility} All participants were asked if they identified as anti-AI; an affirmative response was required to proceed through the rest of the survey. 5 of 46 participants (10.9\%) did not identify as anti-AI. While they were included in our dataset, their information was not used to build our model as they fell outside the population of interest. 
-
-\subsection{Anti-AI Rationale} We asked anti-AI participants why they were anti-AI, having them select one of four choices that best reflected their opinion in creating an outcome variable of interest: \begin{enumerate}
+\subsection{Anti-AI Rationale} 
+We asked anti-AI participants why they were anti-AI, having them select one of four choices that best reflected their opinion in creating an outcome variable of interest: \begin{enumerate}
     \item I have concerns about about its impact on the environment
     \item I don't think the technology is trustworthy and secure
     \item I have concerns about its impact on jobs and economic inequality
@@ -120,23 +121,60 @@ Using RDS, we attempted to ask why anti-AI undergraduates were anti-AI. We selec
     \end{enumerate} 
 \textbf{\color{red}{We hypothesized that while housing community may have been independent from anti-AI... trying to figure out if we should talk about cond. independence here, given she doesn't seem convinced? }}  
 
-\subsection{Demographics} To identify possible covariates, we asked each participant for their name, political affiliation, and whether they considered themselves. Using the Harvard Facebook, we also collected information on participants' gender, concentration, year, and house. While we considered allowing participants anonymity as part of RDS' confidentiality-preserving properties, we decided that based on our research question, the demographic information provided, and our desire to minimize survey length to maximize participation, it made more sense practically to ask for each participant's full name and for information not otherwise available on the database. 
+\subsection{Demographics} 
+To identify possible covariates, we asked each participant for their name, political affiliation, and whether they were international. Using the Harvard Facebook, we also collected information on participants' gender, concentration, year, and house. 
 
-These co-variates were then cleaned and grouped. Houses were grouped into the roughly equal four house neighborhoods of Quad, River West, River Central, and River East (Dudley was included in Quad). We grouped concentrations into the three categories of Arts \& Humanities, Social Sciences, and Sciences. 
+% While we considered allowing participants anonymity as part of RDS' confidentiality-preserving properties, we decided that based on our research question, the demographic information provided, and our desire to minimize survey length to maximize participation, it made more sense practically to ask for each participant's full name and for information not otherwise available on the database. 
+% Not sure we need this?
 
-Ideally, we wanted each of the formed groups to have an equal size 
-
-
-data cleaning like how we grouped multiple majors into fewer categories, and why some of these groupings are valid (both from a size perspective and ideology perspective. ideally each of the formed groups should have an equal size)
-
+These co-variates were then cleaned and grouped. Houses were grouped into the roughly equal four house neighborhoods of Quad, River West, River Central, and River East (Dudley was included in Quad). We grouped concentrations into the three categories of Arts \& Humanities, Social Sciences, and Sciences. We believe that these groups will help maintain possible correlates to Anti-AI Rationale, as students overall orientation towards sciences, humanities, or social science informs their worldview and perspectives on new technology. These groupings also maintain roughly balanced sizes, which is especially important given our studies' limited sample size.
 
 \subsection{Degree Estimation}
-
 We also collected data about the user's degree within the Anti-AI network. This is important in order to later correct for degree, as RDS is biased towards well-connected nodes who are more likely to be referred. Modeled after the paper [Cite], we asked a specific, measurable proxy question to obtain a relative measure of in-network degree: "To the best of your knowledge, what is the number of known anti-AI Harvard students you've communicated with in the last week?" (We decided that "last week" was a a manageable amount of time for participants to consider.) Nevertheless, we had to assume these participants accurately self-reported their degree. 
 
 \subsection{Referrals}
- 
-Lastly, each participant was asked to send the survey to up to three participants and provide the full name of those referred. In constructing our referral question, we attempted to lower the bias arising from preferential referrals within networks by asking respondents to "Please randomly choose up to three anti-AI Harvard undergraduates you know to refer for this survey." Nevertheless, we recognize that preferential recruitment likely still occurred. Our survey incentive, which consisted of compensating the participant \$3 for each of their referrals who successfully completed the survey also likely resulted in bias from preferential referrals, as respondents would be incentivized to send the survey to people who were more likely to fill out the survey, i.e., with whom they were closer. We decided, nevertheless, that this was necessary to maximize the number of survey responses, part of the project we struggled with. 
+Lastly, each participant was asked to send the survey to up to three participants and provide the full name of those referred. In constructing our referral question, we attempted to lower the bias arising from preferential referrals within networks by asking respondents to "Please randomly choose up to three anti-AI Harvard undergraduates you know to refer for this survey." Nevertheless, we recognize that preferential recruitment likely still occurred. Our survey incentive, which consisted of compensating the participant \$3 for each of their referrals who successfully completed the survey also likely resulted in bias from preferential referrals, as respondents would be incentivized to send the survey to people who were more likely to fill out the survey, i.e., with whom they were closer. We decided, nevertheless, that this was necessary to maximize the number of survey responses, which was a consistent challenge throughout the study. 
+
+The full survey can be found in [appendix].
+
+\section{Survey Results}
+\subsection{Summary of Data}
+We collected 41 samples of individuals with anti-AI sentiment. 
+First, we see in Fig \ref{fig:anti_ai} that anti-AI sentiment is primarily for economic, interpersonal, and environmental reasons, with trust and security being a minor reason. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/anti_ai_reasons_pie_chart.pdf}
+    \caption{Distribution of reasons for being anti-AI.}
+    \label{fig:anti_ai}
+\end{figure}
+
+Next, we see distributions across covariates like year, gender, and house in Fig \ref{fig:covar_distr}. Upperclassmen are more represented in the sample, which is likely due to seed selection effects (we knew more upperclassmen who were anti-AI, so more upperclassmen served as seeds) and propagation through the referral process. Additionally, the sample contains a higher proportion of women relative to other gender categories. In contrast, the distribution of responses across houses is relatively even.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/survey_demographics.pdf}
+    \caption{Distribution of respondents across year, gender, and house.}
+    \label{fig:covar_distr}
+\end{figure}
+
+Finally, we see a distribution of respondents over concentration grouped by field in Fig \ref{fig:grouped_concentration}. We group the concentrations according to Harvard's own designation \cite{Harvard_College}. The resulting distribution is relatively even across the three major groups, which is helpful because it will ensure no single academic division disproportionately drives the composition of the sample, and it also means that some amount of mixing has already occurred in the RDS survey run. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/grouped_concentration_distribution.pdf}
+    \caption{Concentration grouped by field.}
+    \label{fig:grouped_concentration}
+\end{figure}
+
+Finally, we see the resulting network generated by RDS, clustered and colored by wave at which each individual was recruited in \ref{fig:RDS_network}. Clearly, sampling process does not form a fully expanding referral tree as we hoped. Many participants (including some seeds) do not refer any additional individuals, meaning making recruitment chains terminate early. As a result, the realized sample likely has uneven coverage of the underlying population. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{img/RDS_network.pdf}
+    \caption{Visualization of the realized RDS network.}
+    \label{fig:RDS_network}
+\end{figure}
 
 \section{Methodology}
 \subsection{Intuition}
@@ -146,21 +184,13 @@ Under strong homophily, the RDS process no longer behaves like a random walk tha
 Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an ``echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
 \subsection{Proposed Estimator} \label{subsec:proposed_estimator}
 Formally, we consider a population represented by a network $G = (V, E),$ partitioned into $K$ communities $\mathcal{C} = \{1, 2, \ldots, K\}.$ Each individual $i \in V$ has both a community label $c(i) \in \mathcal{C}$ as well as exactly one of $I$ opinions, $Y_i \in \{1, 2, \ldots I\}.$ 
-Let the RDS process be defined as a sequence of referrals $\{i_t\}_{t = 1}^n,$ so the total sample size is $n.$
-The standard Volz-Heckathorn estimator estimates the population mean of a function $g(Y)$ as
-% TODO delete if already introduced}
-
-\[
-\hat \mu_{VH} = \frac{\sum_{t = 1}^n \frac{g(Y_{i_t})}{d_{i_t}}}{\sum_{t = 1}^n \frac{1}{d_{i_t}}}.
-\]
-
-We propose to downweight within-community referrals; that is,
+Let the RDS process be defined as a sequence of referrals $\{i_t\}_{t = 1}^n,$ so the total sample size is $n.$ We propose to downweight within-community referrals; that is,
 
 \begin{equation}\label{eq:main_estimator}
 w_t(\alpha) = \frac{1}{d_{i_t}} \cdot \alpha^{I(c(i_t) = c(i_{t - 1}))}
 \end{equation}
 
-\noindent where $\alpha \in [0, 1].$ Note that seeds as well as first entries into a community are not downweighted, but all following referrals that remain within the same community are downweighted. Then the modified estimator is
+\noindent where $\alpha \in [0, 1].$ Note that seeds as well as first entries into a community are not downweighted, but all following referrals that remain within the same community are downweighted. Then the modified Volz-Heckathorn estimator is
 
 \[
 \hat \mu(\alpha) = \frac{\sum_{t = 1}^n w_t(\alpha) g(Y_{i_t})}{\sum_{t = 1}^n w_t(\alpha)}.
@@ -206,7 +236,6 @@ We define the effective sample size $n_{eff}$ as the number of independent sampl
     \frac{\sigma^2_\gamma + \sigma^2_\epsilon}{k} (1 &+ (k - 1)\rho) = \frac{\sigma^2_\gamma + \sigma^2_\epsilon}{n_{eff}} \\
     \implies n_{eff} &= \frac{k}{1 + (k - 1)\rho}.\\
 \end{align*}
-
 
 \noindent Ideally, the total contribution of a run of $k$ samples in the same community should have weight similar to its effective sample size $n_{eff}.$ Because each observation is assigned weight $\alpha$ (besides the first observation, but we ignore this), then the total weight of the run is $k \alpha.$ Then solving
 
@@ -303,47 +332,31 @@ The resulting histogram is shown in Fig \ref{fig:kl_histogram}. Across the 100 t
 \textbf{\color{red} talk about unrealistic thigns that we did. eg everyone referred 2 nodes (until the end was reached). maybe $\alpha$ should depend on seed nodes and size of samples.}
 
 \section{Application on Data}
-\subsection{Summary of Data}
-We collected 41 samples of individuals with anti-AI sentiment. 
-First, we see in Fig \ref{fig:anti_ai} that anti-AI sentiment is primarily for economic, interpersonal, and environmental reasons, with trust and security being a minor reason. 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{img/anti_ai_reasons_pie_chart.pdf}
-    \caption{Distribution of reasons for being anti-AI.}
-    \label{fig:anti_ai}
-\end{figure}
-
-Next, we see distributions across covariates like year, gender, and house in Fig \ref{fig:covar_distr}. Upperclassmen are more represented in the sample, which is likely due to seed selection effects (we knew more upperclassmen who were anti-AI, so more upperclassmen served as seeds) and propagation through the referral process. Additionally, the sample contains a higher proportion of women relative to other gender categories. In contrast, the distribution of responses across houses is relatively even.
-
-\begin{figure}
-    \centering
-    \includegraphics[width=0.9\linewidth]{img/survey_demographics.pdf}
-    \caption{Distribution of respondents across year, gender, and house.}
-    \label{fig:covar_distr}
-\end{figure}
-
-Finally, we see a distribution of respondents over concentration grouped by field in Fig \ref{fig:grouped_concentration}. We group the concentrations according to Harvard's own designation \cite{Harvard_College}. The resulting distribution is relatively even across the three major groups, which is helpful because it will ensure no single academic division disproportionately drives the composition of the sample, and it also means that some amount of mixing has already occurred in the RDS survey run. 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{img/grouped_concentration_distribution.pdf}
-    \caption{Concentration grouped by field.}
-    \label{fig:grouped_concentration}
-\end{figure}
-
-Finally, we see the resulting network generated by RDS, clustered and colored by wave at which each individual was recruited in \ref{fig:RDS_network}. Clearly, sampling process does not form a fully expanding referral tree as we hoped. Many participants (including some seeds) do not refer any additional individuals, meaning making recruitment chains terminate early. As a result, the realized sample likely has uneven coverage of the underlying population. 
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\linewidth]{img/RDS_network.pdf}
-    \caption{Visualization of the realized RDS network.}
-    \label{fig:RDS_network}
-\end{figure}
 
 \subsection{Application of Proposed Methodology}
 To apply our methodology, we must find the appropriate reweighting constant $\alpha.$ To do so, we will use the formula for $\alpha^*$ which requires that we have estimates for $p_{in}$ and $\rho.$ We will model the network as an SBM, so we first construct community structure by using the grouped concentrations. These community assignments can then be used to estimate homophily. We must also estimate the correlation of community opinion with the dominant opinion of that community. 
 
+To estimate $p_{in}$ and $p_{out},$ we use the observed RDS recruitment edges. Let $E_{in}$ be the number of edges where the recruiter and recruit are in the same community, and $E_{out}$ be the number of edges where recruiter and recruit are in different communities. Then we find
+
+\[
+\hat p_{in} = \frac{E_{in}}{E_{in} + E_{out}}, \hat p_{out} = \frac{E_{out}}{E_{in} + E_{out}}.
+\]
+
+\noindent Of course, these probabilities are not literal SBM edge probabilities, but instead an empirical measure of tendency of within-community recruitment. However, it is impossible for us to recover the true underlying friendship network, and therefore we'll treat $\hat p_{in}$ as the intracommunity connection probability of an SBM. \textbf{\color{red} might want to say more about that}
+Running this algorithm gives $\hat p_{in} = 0.555.$
+
+Next, we estimate $\rho,$ the correlation of an individual's opinion with the dominant opinion of the community. For each community, we first identify the dominant opinion as the most common response of those community members. We then compute the fraction of individuals whose opinion matches the dominant opinion. Formally, if $o_i$ is the opinion of individual $i$ and $o^*(c(i))$ is the dominant opinion of community $c(i),$ then
+
+\[
+\hat \rho = \frac{1}{N}\sum_{i = 1}^N I(o_i = o^*(c(i))).
+\]
+
+\noindent This algorithm gives $\hat \rho = 0.463.$
+
+We then run our proposed method on the data with the derived $\alpha^* = 0.633.$ The results appear in Fig \ref{fig:estimators_on_our_data}; we can see that the sample distribution, Volz-Heckathorn estimator, and our proposed estimator all give different distributions for anti-AI sentiment. However, the results of Volz-Heckathorn and our proposed method yield very similar results, which is expected because $\alpha$ is moderately large. The close alignment of all three estimates suggests that, in this setting, Volz-Heckathorn is already able to account for the majority of distortion induced by RDS, and the $\alpha$ adjustment doesn't add much improvement. 
+The moderate estimates of $\hat p_{in}$ and $\hat \rho$ indicate that while there is within-group preference for recruitment as well as general correlation with a ``dominant" choice per concentration, it is not sufficiently strong to cause clustering of opinions on recruitment chains. As a result, the sampling process is able to have enough mixing that degree correction alone may be sufficient to correct for bias.
+
+We still perform robustness checks 
 
 
 
@@ -354,6 +367,7 @@ To apply our methodology, we must find the appropriate reweighting constant $\al
 give an algorithm for this (eg estimate $\rho, k$ and then get $\alpha$. then run on data)
     Tbd...
 
+\textbf{\color{red} Both $\hat\rho$ and $\hat p_{in}$ don't really meet what we're looking for.}
 \textbf{\color{red} Issues with data: people can be part of multiple concentrations}
 		
 Once we reweight the data by alpha, we get a a distribution that we believe more closely
@@ -361,8 +375,10 @@ estimates the true distribution of responses among our community in question (Lu
 
 We compare our reweighted covariate pool with the unweighted pool and do indeed that we get closer to uniform
 
+\includegraphics[width=\linewidth]{img/house_comparison_side_by_side.pdf}
 
-? But not close enough and therefore we conclude that our data does not fit our assumptions well enough to be applicable.
+
+But not in any significant way. Hence, we conclude that our data does not fit our assumptions well enough to be applicable.
 
 \section{Future Directions}
 
@@ -370,6 +386,74 @@ want some more formality on $\alpha.$ Test on more values of $p, q;$ see when th
 	
 
 \printbibliography
+
+\section*{Appendix: Anti-AI Survey Instrument}
+
+\subsection*{Survey Overview}
+
+This survey was administered via Google Forms. Respondents with anti-AI views were recruited through a snowball sampling procedure: each participant was asked to refer up to three anti-AI Harvard undergraduates, and was compensated \$3 per successful referral (limited to the first 70 respondents). The survey link was \url{https://forms.gle/4QndvJVYefKf7YwG8}.
+
+\bigskip
+\noindent\textit{Note: Contact emails for the research team: \texttt{akang@college.harvard.edu}, \texttt{jjpoulson@college.harvard.edu}, \texttt{justinli@college.harvard.edu}, \texttt{bobbycupps@college.harvard.edu}, \texttt{zgladney@college.harvard.edu}.}
+
+\subsection*{Survey Questions}
+
+\noindent\textbf{Screening Question}
+
+\begin{enumerate}
+    \item Do you consider yourself anti-AI? \hfill \textit{(Required)}
+    \begin{itemize}
+        \item Yes \quad $\square$
+        \item No \quad $\square$
+    \end{itemize}
+    \textit{Respondents who answered ``No'' did not proceed further.}
+\end{enumerate}
+
+\bigskip
+\noindent\textbf{Main Survey} \textit{(Shown only to respondents who answered ``Yes'' above)}
+
+\begin{enumerate}
+    \setcounter{enumi}{1}
+
+    \item Why are you anti-AI? Please choose the response that most closely reflects your opinion. \hfill \textit{(Required)}
+    \begin{itemize}
+        \item I have concerns about its impact on the environment. \quad $\square$
+        \item I don't think the technology is trustworthy and secure. \quad $\square$
+        \item I have concerns about its impact on jobs and economic inequality. \quad $\square$
+        \item I have concerns about its impact on interpersonal relationships. \quad $\square$
+    \end{itemize}
+
+    \item What political party do you most closely identify with? \hfill \textit{(Required)}
+    \begin{itemize}
+        \item Democratic \quad $\square$
+        \item Republican \quad $\square$
+        \item Independent \quad $\square$
+        \item Other \quad $\square$
+        \item Prefer not to say \quad $\square$
+    \end{itemize}
+
+    \item Do you consider yourself international? \hfill \textit{(Required)}
+    \begin{itemize}
+        \item Yes \quad $\square$
+        \item No \quad $\square$
+    \end{itemize}
+
+    \item To the best of your knowledge, what is the number of known anti-AI Harvard students you have communicated with in the last week? \hfill \textit{(Required, numeric response)}
+
+    \bigskip
+
+    \item What is your Zelle or Venmo (please specify which)? \hfill \textit{(Optional)}\\
+    \textit{Compensation was provided for successful referrals only. If a referred respondent was referred by multiple people, only the first referrer was compensated.}
+
+    \bigskip
+
+    \item Please list the names of up to three anti-AI Harvard undergraduates you are referring to this survey. \hfill \textit{(Required: Name \#1; Optional: Names \#2--3)}
+
+    \bigskip
+
+    \item Additional comments? \hfill \textit{(Optional)}
+
+\end{enumerate}
 
 %----------------------------------------------------------
 
