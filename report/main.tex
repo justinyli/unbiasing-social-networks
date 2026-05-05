@@ -30,7 +30,7 @@
 %----------------------------------------------------------
 
 \begin{abstract}
-    Respondent-Driven Sampling (RDS) is a useful statistical sampling tool for gathering data from target populations that are difficult to otherwise study due to sparsity, stigma, and small population sizes. However, the use of RDS in practice involves strong assumptions, specifically assumptions that homophilic communities within the target population will eventually be sufficiently mixed in the sampling chain to reduce bias induced by uneven seed selection and preferential recruitment. This paper tests that assumption in practice through a study of Anti-AI Harvard students, utilizing existing estimators as well as a novel estimator to reduce RDS bias in practice. We find that... \textbf{\color{red} what do we find???}
+    Respondent-Driven Sampling (RDS) is a useful statistical sampling tool for gathering data from target populations that are difficult to otherwise study due to sparsity, stigma, and small population sizes. However, the use of RDS in practice involves strong assumptions, specifically assumptions that homophilic communities within the target population will eventually be sufficiently mixed in the sampling chain to reduce bias induced by uneven seed selection and preferential recruitment. This paper tests that assumption in practice through a study of anti-AI Harvard students, utilizing existing estimators as well as a novel estimator to reduce RDS bias in practice. Our proposed $\alpha$-weighted correction provides a principled way to account for higher level dependencies in sampling, and gives modest improvements in simulation. An application of this methodology on the anti-AI dataset yields moderate reduction in cross-group heterogeneity, suggesting that this method could improve the recovery of true population-level distributions.
 \end{abstract}
 
 %----------------------------------------------------------
@@ -46,13 +46,13 @@
 \section{Introduction and Motivation}
 
 Surveys of "hidden" or "hard-to-reach" populations face obstacles as these populations of interest, which often face stigma, marginalization, or are otherwise rare, lack manageable sampling frames where the size and boundaries of the population are unknown, their members are too sparsely distributed in the general population to be reached efficiently through conventional survey design, and there exist privacy concerns that may result in refusal to participate or unreliable answers. Drug injectors in Connecticut constitute one such population. Introduced by Heckathorn~\cite{heckathorn1997respondent} %(1997)
-to study this population's characteristics, Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn 
+to study this population's characteristics, Respondent-Driven Sampling (RDS) and its extensions by Salganik and Heckathorn~\cite{salganik2004sampling}
 %(2004)
-, Heckathorn ~\cite{heckathorn2002respondent} ~\cite{heckathorn2007extensions}
+, Heckathorn~\cite{heckathorn2002respondent} ~\cite{heckathorn2007extensions}
 %(2002, 2007)
-, and Volz and Heckathorn 
+, and Volz and Heckathorn~\cite{volz2008probability} 
 %(2008)
-~\cite{volz2008probability}, address these obstacles, as Gile and Handcock~\cite{gile2010respondent}
+, address these obstacles, as Gile and Handcock~\cite{gile2010respondent}
 %(2010)
  frame, through innovating in two areas: \textbf{survey design} and \textbf{inference}. 
 
@@ -65,7 +65,8 @@ The second innovation of RDS is in conceptualizing the waves of recruitment as a
 \subsection{Existing Estimators}
 RDS thus allows researchers to estimate population-level characteristics, where inclusion probabilities can approximated by $\tilde{\pi}_i \propto d_i$, and population-level characteristics can then be estimated by reweighting observations by $1/d_i$. Common to these RDS approaches, however, is that non-random network structure biases sampling. 
 
-The standard Volz-Heckathorn (VH) (2008)~\cite{volz2008probability} estimator, which models the recruitment process as a random walk, estimates the population mean of a function $g(Y)$:
+The standard Volz-Heckathorn (VH)~\cite{volz2008probability} %(2008)
+ estimator, which models the recruitment process as a random walk, estimates the population mean of a function $g(Y)$:
 
 \[
 \hat \mu_{VH} = \frac{\sum_{t = 1}^n \frac{g(Y_{i_t})}{d_{i_t}}}{\sum_{t = 1}^n \frac{1}{d_{i_t}}}.
@@ -85,11 +86,11 @@ Failure to meet any of these assumptions contributes to bias into the final esti
 We are interested in investigating specifically how assumption ii, uneven recruitment under homophily, holds up in practice, and how it might be addressed if unmet. In this paper, we ask: \textbf{which assumptions of RDS are met and violated in practice, and how well do existing and novel methods for adjusting bias account for these real-world results?} \textbf{\color{red} Lets come back to this at the end and make sure this is the precise question we want to ask.} Indeed, how might we de-bias our sample in situations of non-mixing? In the process of accounting for homophily within communities, we extend the VH estimator to develop a novel re-weighting mechanism. 
 
 \section{Our Experiment}
-Artificial Intelligence (AI) has been a massively transformative and fast-moving technology since the initial release of ChatGPT in 2022. A recent Crimson study found that on average, "students say they use artificial intelligence to complete 34.5 percent of their homework" (Crimson)~\cite{crimson2026aisurvey}. Given this rapid rollout and adoption of AI, the question of whether or not this technology should exist or be embraced at all are overshadowed by the preeminence of technological accelerationism. Thus, we believe it is interesting and important to give voice to those who oppose AI in order to illuminate alternative viewpoints. Throughout the following, we define \textit{anti-AI} as a self-defined identity against \textit{not anti-AI}, requiring in-network participants to "opt-in" to the label.
+Artificial Intelligence (AI) has been a massively transformative and fast-moving technology since the initial release of ChatGPT in 2022. A recent Crimson study found that on average, "students say they use artificial intelligence to complete 34.5 percent of their homework"~\cite{crimson2026aisurvey}. Given this rapid rollout and adoption of AI, the question of whether or not this technology should exist or be embraced at all are overshadowed by the preeminence of technological accelerationism. Thus, we believe it is interesting and important to give voice to those who oppose AI in order to illuminate alternative viewpoints. Throughout the following, we define \textit{anti-AI} as a self-defined identity against \textit{not anti-AI}, requiring in-network participants to "opt-in" to the label.
 
-There are several challenges to studying Anti-AI Harvard students as a target population in practice. For one, Anti-AI students are a small population -- In the Crimson's AI study, they found only around 6\% of their 300 students surveyed do not use generative AI services. Thus, we can extrapolate that the proportion of Harvard students who are Anti-AI is relatively small, and therefore collecting data on these students from a random sample would be extremely difficult. Moreover, the identity of Anti-AI is stigmatized, especially in particular academic contexts where AI has been adopted as a new norm and reflected in pejoratives like "Luddite." We also assume this population will be practically hard to reach because they're more likely to be broadly anti-technology and less trusting of institutions and data collection. Lastly, we assume that Anti-AI Harvard students exist within a relatively well-connected social network.
+There are several challenges to studying anti-AI Harvard students as a target population in practice. For one, anti-AI students are a small population -- In the Crimson's AI study, they found only around 6\% of their 300 students surveyed do not use generative AI services. Thus, we can extrapolate that the proportion of Harvard students who are anti-AI is relatively small, and therefore collecting data on these students from a random sample would be extremely difficult. Moreover, the identity of anti-AI is stigmatized, especially in particular academic contexts where AI has been adopted as a new norm and reflected in pejoratives like "Luddite." We also assume this population will be practically hard to reach because they're more likely to be broadly anti-technology and less trusting of institutions and data collection. Lastly, we assume that anti-AI Harvard students exist within a relatively well-connected social network.
 
-All of these assumptions make Anti-AI Harvard students an appropriate target population to study with RDS: Though they are difficult to study via random sampling, due to small population size and identity stigmatization, their social networks should allow us to utilize referral sampling in order to reach a sufficient number of students to collect and estimate on meaningful data.
+All of these assumptions make anti-AI Harvard students an appropriate target population to study with RDS: Though they are difficult to study via random sampling, due to small population size and identity stigmatization, their social networks should allow us to utilize referral sampling in order to reach a sufficient number of students to collect and estimate on meaningful data.
 
 Thus, in order to explore our research question about RDS in practice, we utilized RDS to sample anti-AI Harvard undergraduates and better understand these undergraduates' perspectives on \textbf{why} they are anti-AI, building a graph model based on the data collected.
 
@@ -130,7 +131,6 @@ We asked anti-AI participants why they were anti-AI, having them select one of f
     \item I have concerns about its impact on jobs and economic inequality
     \item I have concerns about its impact on interpersonal relationships.
     \end{enumerate} 
-\textbf{\color{red}{We hypothesized that while housing community may have been independent from anti-AI... trying to figure out if we should talk about cond. independence here, given she doesn't seem convinced? }}  
 
 \subsection{Demographics} 
 To identify possible covariates, we asked each participant for their name, political affiliation, and whether they were international. Using the Harvard Facebook, we also collected information on participants' gender, concentration, year, and house. 
@@ -138,10 +138,10 @@ To identify possible covariates, we asked each participant for their name, polit
 % While we considered allowing participants anonymity as part of RDS' confidentiality-preserving properties, we decided that based on our research question, the demographic information provided, and our desire to minimize survey length to maximize participation, it made more sense practically to ask for each participant's full name and for information not otherwise available on the database. 
 % Not sure we need this?
 
-These co-variates were then cleaned and grouped. Houses were grouped into the roughly equal four house neighborhoods of Quad, River West, River Central, and River East (Dudley was included in Quad). We grouped concentrations into the three categories of Arts \& Humanities, Social Sciences, and Sciences, which is a taxonomy defined by Harvard \cite{Harvard_College}, and students were assigned to a category based on their primary concentration. We believe that these groups will help maintain possible correlates to Anti-AI Rationale, as students overall orientation towards sciences, humanities, or social science informs their worldview and perspectives on new technology. These groupings also maintain roughly balanced sizes, which is especially important given our studies' limited sample size.
+These co-variates were then cleaned and grouped. Houses were grouped into the roughly equal four house neighborhoods of Quad, River West, River Central, and River East (Dudley was included in Quad). We grouped concentrations into the three categories of Arts \& Humanities, Social Sciences, and Sciences, which is a taxonomy defined by Harvard~\cite{Harvard_College}, and students were assigned to a category based on their primary concentration. We believe that these groups will help maintain possible correlates to anti-AI Rationale, as students overall orientation towards sciences, humanities, or social science informs their worldview and perspectives on new technology. These groupings also maintain roughly balanced sizes, which is especially important given our studies' limited sample size.
 
 \subsection{Degree Estimation}
-We also collected data about the user's degree within the Anti-AI network. This is important in order to later correct for degree, as RDS is biased towards well-connected nodes who are more likely to be referred. Because the accuracy of self-reported degree can be a source of error in RDS, we made sure to follow best practices to create a question that lends itself to accurate self-reporting. As is explained in \cite{mccreesh2012evaluation}, it is important to ask a specific, measurable proxy question to obtain a relative measure of in-network degree. We arrived at the question: "To the best of your knowledge, what is the number of known anti-AI Harvard students you've communicated with in the last week?". This prevents respondents from lazily overestimating their degree as "communicated with in the last week" enforces a lower bound on the substance of the relation. We also guard against inflation of degree by making sure the potential referees are "known" to be anti-AI. We assume that the risks to underestimate one's degree are low so that these two safeguards contribute only to bias reduction.
+We also collected data about the user's degree within the anti-AI network. This is important in order to later correct for degree, as RDS is biased towards well-connected nodes who are more likely to be referred. Because the accuracy of self-reported degree can be a source of error in RDS, we made sure to follow best practices to create a question that lends itself to accurate self-reporting. As is explained in~\cite{mccreesh2012evaluation}, it is important to ask a specific, measurable proxy question to obtain a relative measure of in-network degree. We arrived at the question: "To the best of your knowledge, what is the number of known anti-AI Harvard students you've communicated with in the last week?". This prevents respondents from lazily overestimating their degree as "communicated with in the last week" enforces a lower bound on the substance of the relation. We also guard against inflation of degree by making sure the potential referees are "known" to be anti-AI. We assume that the risks to underestimate one's degree are low so that these two safeguards contribute only to bias reduction.
 
 \subsection{Referrals}
 Lastly, each participant was asked to send the survey to up to three participants and provide the full name of those referred. In constructing our referral question, we attempted to lower the bias arising from preferential referrals within networks by asking respondents to "Please \textbf{randomly} choose up to three anti-AI Harvard undergraduates you know to refer for this survey." Nevertheless, we recognize that preferential recruitment likely still occurred.
@@ -150,7 +150,7 @@ Our survey incentive, which consisted of compensating the participant \$3 for ea
 
 \section{Survey Results}
 \subsection{Summary of Data}
-We collected 41 samples of Anti-AI Harvard students. 
+We collected 41 samples of anti-AI Harvard students. 
 First, we see in Fig \ref{fig:anti_ai} that anti-AI sentiment is primarily for economic, interpersonal, and environmental reasons, with trust and security being a minor reason.
 
 \begin{figure}
@@ -193,7 +193,7 @@ We propose a community-aware weighting scheme that generalizes the Volz-Heckatho
 
 Under strong homophily, the RDS process no longer behaves like a random walk that mixes between communities. Furthermore, opinions are often strongly correlated with community. \textbf{\color{red}can we support these two claims w our data?} Therefore, consecutive samples within the same community may carry less information about the overall population distribution, and cross-community referrals act as mixing events that carry disproportionately more information about population level distributions. 
 
-Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an "echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. textbf{\color{red}If we want to talk about the other estimators, i think this owuld be the palce to explain how they are worse than our new estimator}. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
+Our idea is to explicitly use this structure in a weighting scheme to reduce the contribution of same-community transitions. Intuitively, this will reduce the effect of oversampling an "echo chamber" where a group of friends with similar covariates share the same opinion and all respond to the survey and then send the survey to more of their friends with similar covariates. While the standard Volz-Heckathorn estimator accounts for bias caused by degree with the assumption of approximate mixing, it doesn't account for the community structure stopping mixing. \textbf{\color{red}If we want to talk about the other estimators, i think this would be the place to explain how they are worse than our new estimator}. This method is meant to improve estimation by reducing the contribution of redundant observations that could inflate variance.
 
 \subsection{Proposed Estimator} \label{subsec:proposed_estimator}
 Formally, we consider a population represented by a network $G = (V, E),$ partitioned into $K$ communities $\mathcal{C} = \{1, 2, \ldots, K\}.$ Each individual $i \in V$ has both a community label $c(i) \in \mathcal{C}$ as well as exactly one of $I$ opinions, $Y_i \in \{1, 2, \ldots I\}.$ 
@@ -342,7 +342,7 @@ The resulting histogram is shown in Fig \ref{fig:kl_histogram}. Across the 100 t
 \section{Application on Data}
 
 \subsection{Application of Proposed Methodology}
-To apply our methodology, we must find the appropriate reweighting constant $\alpha.$ To do so, we will use the formula for $\alpha^*$ which requires that we have estimates for $p_{in}$ and $\rho.$ We will model the network as an SBM, so we first construct community structure by using the grouped concentrations. These community assignments can then be used to estimate homophily. We must also estimate the correlation of community opinion with the dominant opinion of that community. 
+To apply our methodology, we must find the appropriate reweighting constant $\alpha.$ To do so, we will use the formula for $\alpha^*$ which requires that we have estimates for $p_{in}$ and $\rho.$ We will model the network as an SBM, so we first construct community structure by using the \textbf{grouped concentrations}. \textbf{\color{purple} We chose concentration as the community we're controlling for because we suspect that individuals are much more likely to refer other students within their concentration group, and because we suspect that concentration is influential in informing the perspective and worldview behind the individual's rationale.} \textbf{\color{red} Do we want to include the modularity and correlation measurements here to help evaluate this claim empirically, or just do a theoretical argument?} These community assignments can then be used to estimate homophily. We must also estimate the correlation of community opinion with the dominant opinion of that community. 
 
 To estimate $p_{in}$ and $p_{out},$ we use the observed RDS recruitment edges. Let $E_{in}$ be the number of edges where the recruiter and recruit are in the same community, and $E_{out}$ be the number of edges where recruiter and recruit are in different communities. Then we find
 
@@ -351,7 +351,7 @@ To estimate $p_{in}$ and $p_{out},$ we use the observed RDS recruitment edges. L
 \]
 
 \noindent Of course, these probabilities are not literal SBM edge probabilities, but instead an empirical measure of tendency of within-community recruitment. However, it is impossible for us to recover the true underlying friendship network, and therefore we'll treat $\hat p_{in}$ as the intracommunity connection probability of an SBM.
-Running this algorithm gives $\hat p_{in} = 0.555.$
+Running this algorithm gives $\hat p_{in} = 0.555.$ \textbf{\color{red} is this just using concentration as the community?}
 
 Next, we estimate $\rho,$ the correlation of an individual's opinion with the dominant opinion of the community. For each community, we first identify the dominant opinion as the most common response of those community members. We then compute the fraction of individuals whose opinion matches the dominant opinion. Formally, if $o_i$ is the opinion of individual $i$ and $o^*(c(i))$ is the dominant opinion of community $c(i),$ then
 
@@ -379,6 +379,7 @@ The moderate estimates of $\hat p_{in}$ and $\hat \rho$ indicate that while ther
 \end{figure}
 
 We next perform robustness checks of our method. While we do not know the true distribution of beliefs among the Harvard undergraduate population, we will evaluate our $\alpha$-weighted correction by cross-neighborhood heterogeneity. Specifically, we expect that anti-AI reasoning should be independent of one's physical living neighborhood. Therefore, systematic differences in observed opinion distribution across neighborhoods are more likely due to errors in sampling than due to actual variation in beliefs. 
+
 Under this interpretation, a desirable effect of our estimator is to reduce variation in conditional distributions across neighborhoods. To investigate this, we consider the distribution of opinion in each neighorhood, but we weight opinion using weights from Volz-Heckathorn or our proposed $\alpha$-weighting method. As we can see in Fig \ref{fig:VH_vs_alpha_by_neighborhood}, using our methodology makes distribution of opinion more similar across neighborhoods. To quantify this effect, we measure the dispersion of neighborhood-level distributions relative to the overall distribution generated for each estimator method. Specifically, for each neighborhood, we compute the squared $\ell_2$ distance between its opinion distribution and the global average distribution, and then average this quantity across neighborhoods; we do this for raw sample, the Volz–Heckathorn estimator, and our $\alpha$-adjusted estimator.
 
 \begin{table}[h]
